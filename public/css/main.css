@@ -1,0 +1,74 @@
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+}
+
+
+#banner{
+    position: absolute;
+    height: 70px;
+    width: 1310px;
+    background-color: #7d7d80;
+    margin:10px;
+    padding-top: 30px;
+    text-align: center;
+    font-size: xx-large;
+    color:floralwhite;
+}
+#input-container{
+
+    position: absolute;
+    top: 120px;
+    width: 300px;
+    padding: 10px;
+    height: 1000px;
+    margin: 10px;
+
+    color: #444444;
+    background-color: #0B9BCD;
+
+    font-size:larger;
+    font-family: Verdana;
+}
+#graph-container{
+
+    position: absolute;
+    top: 120px;
+    border: 1px solid #ddd;
+    width: 1000px;
+    height: 1000px;
+    left: 310px;
+    margin: 10px;
+
+}
+
+#sif-file-input{
+
+    font-size:medium;
+}
+
+.check-grouping{
+
+    padding-top: 30px;
+    font-size:small;
+}
+
+.sif-input-text{
+
+    font-size: small;
+    align: left;
+}
+
+#sifBox{
+    width: 250px;
+}
+
+
+/*.instructions{*/
+    /*color: peachpuff;*/
+    /*font-size:larger;*/
+    /*font-family: 'Lucida Grande', sans-serif;*/
+    /*font-stretch: expanded;*/
+/*}*/

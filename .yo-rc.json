@@ -1,0 +1,9 @@
+{
+  "generator-derby": {
+    "project": "CODEX",
+    "apps": [
+      "codex"
+    ],
+    "coffee": false
+  }
+}
