@@ -252,10 +252,6 @@ app.proto.init = function (model) {
         model.set('_page.doc.sifText', sifText);
     }
 
-
-
-
-
     model.on('insert', '_page.list', function (index) {
 
 
@@ -319,7 +315,20 @@ app.proto.updateSifGraph = function(){
     var doTopologyGrouping = this.model.get('_page.doc.doTopologyGrouping');
     //var sifCy = require('./public/src/sif-visualizer/sif-cy.js')($('#graph-container'), sifText,topologyGrouping );
 
-    sifCy($('#graph-container'), sifText,doTopologyGrouping);
+    var sifCy = new SifCy($('#graph-container'), sifText, doTopologyGrouping);
+}
+
+app.proto.loadSifFile = function(){
+
+    var self = this;
+    var reader = new FileReader();
+    reader.onload = function (e) {
+
+       self.model.set('_page.doc.sifText', this.result);
+       self.updateSifGraph();
+
+    };
+    reader.readAsText($("#sif-file-input")[0].files[0]);
 }
 
 

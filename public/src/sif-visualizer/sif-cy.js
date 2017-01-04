@@ -6,7 +6,8 @@
 
 function convertSifToCytoscape(sifText, doTopologyGrouping){
 
-    var interactions = SIFJS.parse(sifText);
+
+    var interactions = new SifParser(sifText);
 
     console.log(interactions);
     console.log(doTopologyGrouping);
@@ -34,7 +35,7 @@ function convertSifToCytoscape(sifText, doTopologyGrouping){
 
 }
 
-var sifCy = function(el, sifText, doTopologyGrouping) {
+var SifCy = function(el, sifText, doTopologyGrouping) {
 
     var cyElements = convertSifToCytoscape(sifText, doTopologyGrouping);
 

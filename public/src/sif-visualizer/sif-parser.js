@@ -1,66 +1,92 @@
-//private members
+/***
+ * @param text: sif file
+ * @returns {{nodes: *, edges: *}}
+ * @constructor
+ */
+function SifParser(text){
 
-var _getNode = function(nodes, id){
-    if(!nodes[id]) nodes[id] = {id:id};
-    return nodes[id];
-}
-    
-var _parse = function(nodes, edges, line, i){
-
-
-    line = (line.split('\t').length > 1) ? line.split('\t') : line.split(' ');
-
-
-    if(line[0]=="")
-        return;
-
-    if(line.length == 1){
-        _getNode(nodes, line[0]);
-
-    }
-    else if(line.length == 3) {
-        var source = _getNode(nodes, line[0]);
-        var edgeType = line[1];
-
-        for (var j = 2; j < line.length; j++) {
-            var target = _getNode(nodes, line[j]);
-            var edgeId;
+    var self = this;
+    this.nodes = {};
+    this.edges = {};
 
 
-            edgeId =  source.id  + "_" +  edgeType + "_" + target.id ;
+    /***
+     * @param id
+     * @returns {a node with id}
+     */
+    this.getNode = function (id){
+        if(!this.nodes[id])
+            this.nodes[id] = {id:id};
+        return this.nodes[id];
+    };
 
-            edges[edgeId] = {id: edgeId, source: source.id, target: target.id, edgeType: edgeType};
+    /***
+     * Method to parse one line of a sif file
+     * @param line
+     * @param i : line number
+     */
+    this.parse = function(line, i){
+
+        var self = this;
+        line = (line.split('\t').length > 1) ? line.split('\t') : line.split(' ');
+
+
+        if(line[0]=="")
+            return;
+
+        if(line.length == 1){
+            self.getNode(line[0]);
 
         }
+        else if(line.length == 3) {
+            var source = self.getNode( line[0]);
+            var edgeType = line[1];
 
-    }
-    else{
-        console.warn('SIFJS cannot parse line ' + i + ' "' + line + '"');
+
+            for (var j = 2; j < line.length; j++) {
+                var target = self.getNode(line[j]);
+                var edgeId;
+
+
+                edgeId =  source.id  + "_" +  edgeType + "_" + target.id ;
+
+                self.edges[edgeId] = {id: edgeId, source: source.id, target: target.id, edgeType: edgeType};
+
+            }
+
+        }
+        else{
+            console.warn('SIFJS cannot parse line ' + i + ' "' + line + '"');
+            return;
+        }
+
         return;
     }
 
-    return;
-}
 
-var _toArr = function(obj){
-    var arr = [];
-    for (var key in obj) arr.push(obj[key]);
-    return arr;
-}    
-    
-//public
-function SIFJS() {};
-    
-SIFJS.parse = function(text){
+    /***
+     * Private method that converts an object into an array
+     * @param obj
+     * @returns {Array}
+     */
+    function toArr(obj){
+        var arr = [];
+        for (var key in obj) arr.push(obj[key]);
+        return arr;
+    };
 
-    var nodes = {};
-    var edges = {};
 
 
     var lines = text.split('\n'), i, length;
     for (i = 0, length = lines.length; i < length; i++)
-        _parse(nodes, edges, lines[i], i);
-    
-    return {nodes:_toArr(nodes), edges:_toArr(edges)};
-};
+        self.parse(lines[i], i);
 
+    return {nodes:toArr(self.nodes), edges:toArr(self.edges)};
+
+
+}
+
+
+if (typeof module !== 'undefined' && module.exports) { // expose as a commonjs module
+    module.exports = SifParser;
+}

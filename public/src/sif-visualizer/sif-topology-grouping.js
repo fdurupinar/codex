@@ -111,29 +111,32 @@ function groupTopology(cyElements){
  */
 function areNodesAnalogous(n1, n2,  edges){
 
+    if(n1.incoming.length != n2.incoming.length  || n1.outgoing.length != n2.outgoing.length)
+        return false;
+
     if(!noEdgeBetween(n1.data.id, n2.data.id, edges) && !isCliqueBetween(n1.data.id, n2.data.id, edges))
         return false;
 
+
     //check whether all incoming edges of n1 exist in n2 too
-    for(var i = 0; i < n1.incoming.length; i++){
+    for(var i = 0; i < n1.incoming.length; i++) {
         var edge1 = n1.incoming[i];
         if (isEdgeBetween(n1.data.id, n2.data.id, edge1))  //skip edges between n1 and n2
             continue;
 
         var exists = false;
-        for(var j = 0; j < n2.incoming.length; j++){
+        for (var j = 0; j < n2.incoming.length; j++) {
             var edge2 = n2.incoming[j];
-            if(edge1.data.edgeType == edge2.data.edgeType && edge1.data.source == edge2.data.source){
+            if (edge1.data.edgeType == edge2.data.edgeType && edge1.data.source == edge2.data.source) {
                 exists = true;
                 break;
             }
 
         }
 
-        if(!exists)
+        if (!exists)
             return false;
     }
-
 
 
     //check whether all outgoing edges of n1 exist in n2 too
@@ -162,7 +165,7 @@ function areNodesAnalogous(n1, n2,  edges){
 }
 
 /***
- * Returns true if edge is between nodes with ids id1 and id2
+ * Returns true if 'edge' is between nodes with ids id1 and id2
  * @param id1
  * @param id2
  * @param edge

@@ -5,11 +5,16 @@ body {
     padding: 0px;
 }
 
+:root {
+    --input-width: 400px;
+    --graph-width: 1000px;
+    --margin-width: 10px;
+}
 
 #banner{
     position: absolute;
     height: 70px;
-    width: 1310px;
+    width:  calc( var(--input-width) + var(--graph-width) + var(--margin-width));
     background-color: #7d7d80;
     margin:10px;
     padding-top: 30px;
@@ -21,10 +26,10 @@ body {
 
     position: absolute;
     top: 120px;
-    width: 300px;
+    width: var(--input-width);
     padding: 10px;
     height: 1000px;
-    margin: 10px;
+    margin: var(--margin-width);
 
     color: #444444;
     background-color: #0B9BCD;
@@ -37,10 +42,10 @@ body {
     position: absolute;
     top: 120px;
     border: 1px solid #ddd;
-    width: 1000px;
+    width: var(--graph-width);
     height: 1000px;
-    left: 310px;
-    margin: 10px;
+    left: calc( var(--input-width) + var(--margin-width));
+    margin: var(--margin-width);
 
 }
 
@@ -62,7 +67,7 @@ body {
 }
 
 #sifBox{
-    width: 250px;
+    width: calc( var(--input-width) - 2 * var(--margin-width));
 }
 
 
