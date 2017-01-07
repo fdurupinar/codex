@@ -9,13 +9,15 @@ function convertSifToCytoscape(sifText, doTopologyGrouping){
 
     var interactions = new SifParser(sifText);
 
-    console.log(interactions);
-    console.log(doTopologyGrouping);
+
 
     var nodes = [];
     interactions.nodes.forEach(function (node) {
-        var node = {data:{id:node.id}};
+        var node = {data:{id:node.id, sites: node.sites}};
         nodes.push(node);
+
+
+
 
     });
 
@@ -33,6 +35,49 @@ function convertSifToCytoscape(sifText, doTopologyGrouping){
     else
         return cyElements;
 
+}
+
+function computeStatePositions(){
+
+
+    cy.nodes().forEach(function(node) {
+        node._private.data.sifStates = [];
+        if(node._private.data.sites) {
+            var siteLength = node._private.data.sites.length;
+            for (var i = 0; i < siteLength; i++) {
+                var site = node._private.data.sites[i];
+
+
+                var centerX = node._private.position.x;
+                var centerY = node._private.position.y;
+                var width = node.width();
+                var height = node.height();
+                var stateCenterX;
+                var stateCenterY;
+
+                var stateWidth = 10;
+                var stateHeight = 10;
+
+                stateCenterX = centerX - width / 2 + stateWidth / 2  + width * i /siteLength;
+
+                if(i% 2 == 0)
+                    stateCenterY = centerY - height /  2;
+                else
+                    stateCenterY = centerY + height / 2 ;
+
+                var state = {
+                    'site': site,
+                    'bbox': {'x': stateCenterX, 'y': stateCenterY, 'width': stateWidth, 'height': stateHeight}
+                };
+                node._private.data.sifStates.push(state);
+            }
+            ;
+        }
+
+
+
+
+    });
 }
 
 var SifCy = function(el, sifText, doTopologyGrouping) {
@@ -69,8 +114,11 @@ var SifCy = function(el, sifText, doTopologyGrouping) {
         elements: cyElements,
 
         ready: function () {
-            cy.on('tapend', 'node', function (e) {
-                console.log(this);
+
+            computeStatePositions();
+
+            cy.on('drag', 'node', function (e) {
+                computeStatePositions();
             });
 
             cy.on('tapend', 'edge', function (e) {
@@ -105,9 +153,15 @@ var SifCy = function(el, sifText, doTopologyGrouping) {
 
 
     });
+
+
+    //update sif states
+
+
+
 }
 
 
 if (typeof module !== 'undefined' && module.exports) { // expose as a commonjs module
-    module.exports = sifCy;
+    module.exports = SifCy;
 }

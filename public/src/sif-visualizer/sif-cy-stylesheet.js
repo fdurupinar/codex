@@ -64,23 +64,24 @@ function attributeMap(edgeType){
 var SifStyleSheet = cytoscape.stylesheet()
     .selector('node')
     .css({
-        'border-width':2,
+        'border-width':1,
         'border-color': 'gray',
         'background-color': 'white',
-        'shape': 'roundrectangle',
+        'shape': 'sifNode',
         'text-halign': 'center',
         'text-valign':'center',
+
 
         'width': function(ele){
             var spacing =(ele.data('id').length +2) * 10;
             return  Math.min(200,spacing);
         },
         'height':30,
-        'content': 'data(id)'
+         'content': 'data(id)'
     })
     .selector('edge')
     .css({
-        'width': 3,
+        'width': 1,
         'line-color': function(ele){
             return attributeMap(ele.data('edgeType')).color;
 
@@ -97,9 +98,9 @@ var SifStyleSheet = cytoscape.stylesheet()
             if (ele.data('edgeType') == "in-complex-with" || ele.data('edgeType') == "interacts-with" || //nondirected
                 ele.data('edgeType') == "neighbor-of" || ele.data('edgeType') == "reacts-with")
                 return 'none';
-            return 'triangle';
+            return 'sifArrow';
         },
-        'arrow-size':50,
+        'arrow-size':5,
         'opacity': 0.8
     })
 

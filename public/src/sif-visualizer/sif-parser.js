@@ -10,6 +10,7 @@ function SifParser(text){
     this.edges = {};
 
 
+
     /***
      * @param id
      * @returns {a node with id}
@@ -38,23 +39,26 @@ function SifParser(text){
             self.getNode(line[0]);
 
         }
-        else if(line.length == 3) {
+        else if(line.length >=3 ) {
             var source = self.getNode( line[0]);
             var edgeType = line[1];
 
 
-            for (var j = 2; j < line.length; j++) {
-                var target = self.getNode(line[j]);
-                var edgeId;
+            var target = self.getNode(line[2]);
+            var edgeId;
 
 
-                edgeId =  source.id  + "_" +  edgeType + "_" + target.id ;
+            edgeId =  source.id  + "_" +  edgeType + "_" + target.id ;
 
-                self.edges[edgeId] = {id: edgeId, source: source.id, target: target.id, edgeType: edgeType};
+            self.edges[edgeId] = {id: edgeId, source: source.id, target: target.id, edgeType: edgeType};
+
+            if(line.length == 5){
+                target.sites = line[4].split(';');
 
             }
 
         }
+
         else{
             console.warn('SIFJS cannot parse line ' + i + ' "' + line + '"');
             return;

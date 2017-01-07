@@ -22,7 +22,7 @@ var docReady = false;
 var useQunit = true;
 
 var userCount;
-var socket;
+//var socket;
 
 
 app.on('model', function (model) {
@@ -252,6 +252,7 @@ app.proto.init = function (model) {
         model.set('_page.doc.sifText', sifText);
     }
 
+
     model.on('insert', '_page.list', function (index) {
 
 
@@ -287,7 +288,7 @@ app.proto.create = function (model) {
 
     docReady = true;
 
-    socket = io();
+    //socket = io();
 
     var id = model.get('_session.userId');
     var name = model.get('users.' + id +'.name');
@@ -315,7 +316,12 @@ app.proto.updateSifGraph = function(){
     var doTopologyGrouping = this.model.get('_page.doc.doTopologyGrouping');
     //var sifCy = require('./public/src/sif-visualizer/sif-cy.js')($('#graph-container'), sifText,topologyGrouping );
 
-    var sifCy = new SifCy($('#graph-container'), sifText, doTopologyGrouping);
+    var sifCy = require('./public/src/sif-visualizer/sif-cy.js')($('#graph-container'), sifText, doTopologyGrouping);
+
+
+
+
+
 }
 
 app.proto.loadSifFile = function(){
