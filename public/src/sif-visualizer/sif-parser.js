@@ -52,10 +52,9 @@ function SifParser(text){
 
             self.edges[edgeId] = {id: edgeId, source: source.id, target: target.id, edgeType: edgeType};
 
-            if(line.length == 5){
-                target.sites = line[4].split(';');
-
-            }
+            // if(line.length == 5){
+            //     target.sites = line[4].split(';');
+            //}
 
         }
 

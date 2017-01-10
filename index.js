@@ -124,6 +124,35 @@ app.get('/:docId', function (page, model, arg, next) {
 
     });
 
+    model.subscribe(docPath, 'cgfText', function(err){
+        if (err) {
+            return next(err);
+        }
+
+        model.setNull(docPath, { // create the empty new doc if it doesn't already exist
+            id: arg.docId
+
+        });
+        // create a reference to the document
+        model.ref('_page.doc', 'documents.' + arg.docId);
+
+    });
+
+    model.subscribe(docPath, 'cgf', function(err){
+        if (err) {
+            return next(err);
+        }
+
+        model.setNull(docPath, { // create the empty new doc if it doesn't already exist
+            id: arg.docId
+
+        });
+        // create a reference to the document
+        model.ref('_page.doc', 'documents.' + arg.docId);
+
+    });
+
+
 
 
     //chat related
@@ -253,6 +282,8 @@ app.proto.init = function (model) {
     }
 
 
+
+
     model.on('insert', '_page.list', function (index) {
 
 
@@ -310,31 +341,50 @@ app.proto.clearSifText = function(){
     this.model.set('_page.doc.sifText','');
 }
 
+app.proto.clearCgfText = function(){
+    this.model.set('_page.doc.cgfText','');
+}
+
 app.proto.updateSifGraph = function(){
 
     var sifText = this.model.get('_page.doc.sifText');
     var doTopologyGrouping = this.model.get('_page.doc.doTopologyGrouping');
-    //var sifCy = require('./public/src/sif-visualizer/sif-cy.js')($('#graph-container'), sifText,topologyGrouping );
 
     var sifCy = require('./public/src/sif-visualizer/sif-cy.js')($('#graph-container'), sifText, doTopologyGrouping);
-
-
-
-
-
 }
 
-app.proto.loadSifFile = function(){
+app.proto.updateCgfGraph = function(){
+
+    var cgfJson = this.model.get('_page.doc.cgf');
+    var doTopologyGrouping = this.model.get('_page.doc.doTopologyGrouping');
+
+
+    var cgfCy = require('./public/src/cgf-visualizer/cgf-cy.js')($('#graph-container'),  cgfJson, doTopologyGrouping);
+}
+
+app.proto.loadGraphFile = function(){
 
     var self = this;
+
     var reader = new FileReader();
+
+    var extension = $("#graph-file-input")[0].files[0].name.split('.').pop().toLowerCase();
+
     reader.onload = function (e) {
 
-       self.model.set('_page.doc.sifText', this.result);
-       self.updateSifGraph();
+        if(extension == "sif" || extension == "txt" ) {
+            self.model.set('_page.doc.sifText', this.result);
+            self.updateSifGraph();
+        }
+        else{
+
+            self.model.set('_page.doc.cgfText', this.result);
+            self.model.set('_page.doc.cgf', JSON.parse(this.result));
+            self.updateCgfGraph(this.result);
+        }
 
     };
-    reader.readAsText($("#sif-file-input")[0].files[0]);
+    reader.readAsText($("#graph-file-input")[0].files[0]);
 }
 
 

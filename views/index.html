@@ -6,6 +6,7 @@
 <Head:>
 
     <meta name="viewport" content="width=device-width">
+        <link href="lib/css/font-awesome-4.0.3/css/font-awesome.css" rel="stylesheet">
         <link href="./lib/css/bootstrap.css" rel="stylesheet">
 
 
@@ -15,12 +16,19 @@
     <!-- External Libraries -->
 
 <Body:>
-    <script src="./src/sif-visualizer/global-variables.js"></script>
+
+
+    <!--Cytoscape-related variables-->
+    <script src="./src/utilities/global-variables.js"></script>
+
     <script src="lib/js/jquery-1.8.2.js"></script>
     <script src="lib/js/jquery.fancybox-1.3.4.pack.js"></script>
     <script src="lib/js/jquery.expander-min.js"></script>
     <script src="lib/js/jquery.qtip.js"></script>
     <script src="lib/js/jquery-ui-1.10.3.custom.min.js"></script>
+
+    <script src="lib/js/bootstrap.min.js"></script>
+
     <script src="lib/js/underscore.js"></script>
     <script src="lib/js/cytoscape.js"></script>
     <!--<script src="lib/js/cytoscape.renderer.canvas.sbgn-renderer.js"></script>-->
@@ -33,60 +41,66 @@
     <script src="lib/js/jquery.noty.packaged.js"></script>
     <script src="lib/js/socket.io.js"></script>
     <script src="lib/js/cytoscape-cose-bilkent.js"></script>
-        <!--Source code-->
 
 
+    <!--Source code-->
 
+    <script src="./src/utilities/topology-grouping.js"></script>
+    <script src="./src/utilities/causality-cy-renderer.js"></script>
+
+    <!--Sif-related-->
     <script src="./src/sif-visualizer/sif-parser.js"></script>
-    <script src="./src/sif-visualizer/sif-topology-grouping.js"></script>
     <script src="./src/sif-visualizer/sif-cy-stylesheet.js"></script>
-    <script src="./src/sif-visualizer/sif-cy.js"></script>
-    <script src="./src/sif-visualizer/sif-cy-renderer.js"></script>
+
+    <!--Cgf-related-->
+    <script src="./src/cgf-visualizer/cgf-cy-stylesheet.js"></script>
+
+
+    <!--Causality-related-->
 
     <div id = "banner">
         Proteomics Analysis Tool
     </div>
     <div id= "input-container">
-        <div id="divUpload" class="tabcontent">
+        <!--<div id="divUpload" class="tabcontent">-->
 
             <table  border="0" cellpadding="2" width="100%" align="top" >
                 <tbody>
+
                 <tr>
                     <td  class = "instructions"  align="left" height="15">
-                        A: Paste a Graph
+                       A. Paste a Graph
                     </td>
                 </tr>
+
                 <tr>
-                    <td  valign="top" align="left" >
-                        <textarea rows="10" id="sifBox" class="sif-input-text">{{_page.doc.sifText}}</textarea>
+                    <td>
+                        <view name="text-input-tabs"></view>
                     </td>
-
                 </tr>
 
-
-                <tr>
-                    <td><input type="button" id = "sif-text-clear-button"   value="Clear" on-click ="clearSifText()"> &nbsp;&nbsp;&nbsp;
-
-                        <input type="button" id = "sif-text-submit-button"   value="Submit" on-click ="updateSifGraph()" ></td>
-                </tr>
-
-
-
+                <tr> <td> </td></tr>
 
                 <tr> <td> </td></tr>
                 <tr>
                     <td align="left" height="8">
-                        <b><font color=white  face="Verdana" size="2">Or&nbsp;</font></b>
+                        <b><font color="#444444"  face="Verdana" size="2">Or&nbsp;</font></b>
                     </td>
                 </tr>
                 <tr> <td> </td> </tr>
-                <tr><td class='instructions'>B:Load From a File </td>
-                </tr>
+
                 <tr>
                     <!--<td  align="left" height="25">-->
                     <td>
 
-                    <input type="file" id="sif-file-input" accept=".txt,.sif" on-change = "loadSifFile()">
+                        <div  class="causality-file">
+                            B. Load from a file
+                            <label for="graph-file-input">
+                                <i class="fa fa-file-text"></i> Open
+                            </label>
+
+                            <div><input type="file" id="graph-file-input" accept=".txt,.sif, .cgf" on-change = "loadGraphFile($event)" value ={_page.newFile} ></div>
+                        </div>
                     </td>
                     <!--</td>-->
                 </tr>
@@ -100,20 +114,52 @@
 
             </table>
         </div>
-    </div>
+    <!--</div>-->
     <!--<view name="input-container"></view>-->
+
+
+
+
+
 
     <div id = "graph-container">
 
     </div>
-    <!--Backbone templates-->
-    <!--<script type="text/template" id="sif-view-template">-->
-    <!--</script>-->
 
 
-    <!--<script type="text/template" id= "input-loading-template">-->
+    <text-input-tabs:>
+        <div id= "text-input-tabs">
+            <ul class="nav nav-tabs">
+                <li class = "active "><a data-toggle="tab" href="#cgf-text-area">Cgf</a></li>
+                <li><a data-toggle="tab"  href="#sif-text-area">Sif</a></li>
+            </ul>
 
 
+            <div class="tab-content">
+
+                <div id="cgf-text-area" class="tab-pane fade in active">
+                    <textarea rows="10" id="cgfBox" class="input-text">{{_page.doc.cgfText}}</textarea>
+
+                    <p></p>
+
+                    <input type="button" class = "input-buttons" id = "cgf-text-clear-button"   value="Clear" on-click ="clearCgfText()"> &nbsp;&nbsp;&nbsp;
+
+                    <input type="button" class = "input-buttons" id = "cgf-text-submit-button"   value="Submit" on-click ="updateCgfGraph()" >
+
+                </div>
 
 
-    <!--<script>loadBackboneViews();</script>-->
+                <div id="sif-text-area" class="tab-pane">
+
+                    <textarea rows="10" id="sifBox" class="input-text">{{_page.doc.sifText}}</textarea>
+                    <p></p>
+
+                    <input type="button" class = "input-buttons" id = "sif-text-clear-button"   value="Clear" on-click ="clearSifText()"> &nbsp;&nbsp;&nbsp;
+
+                    <input type="button" class = "input-buttons" id = "sif-text-submit-button"   value="Submit" on-click ="updateSifGraph()" >
+
+                </div>
+
+            </div>
+
+        </div>

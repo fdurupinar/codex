@@ -13,8 +13,8 @@ function convertSifToCytoscape(sifText, doTopologyGrouping){
 
     var nodes = [];
     interactions.nodes.forEach(function (node) {
-        var node = {data:{id:node.id, sites: node.sites}};
-        nodes.push(node);
+
+        nodes.push({data:{id:node.id, sites: node.sites}});
 
 
 
@@ -23,8 +23,7 @@ function convertSifToCytoscape(sifText, doTopologyGrouping){
 
     var edges = [];
     interactions.edges.forEach(function(edge){
-        var edge = {data:{id: edge.id, source: edge.source, target: edge.target, edgeType: edge.edgeType}};
-        edges.push(edge);
+        edges.push({data:{id: edge.id, source: edge.source, target: edge.target, edgeType: edge.edgeType}});
     });
 
 
@@ -37,48 +36,7 @@ function convertSifToCytoscape(sifText, doTopologyGrouping){
 
 }
 
-function computeStatePositions(){
 
-
-    cy.nodes().forEach(function(node) {
-        node._private.data.sifStates = [];
-        if(node._private.data.sites) {
-            var siteLength = node._private.data.sites.length;
-            for (var i = 0; i < siteLength; i++) {
-                var site = node._private.data.sites[i];
-
-
-                var centerX = node._private.position.x;
-                var centerY = node._private.position.y;
-                var width = node.width();
-                var height = node.height();
-                var stateCenterX;
-                var stateCenterY;
-
-                var stateWidth = 10;
-                var stateHeight = 10;
-
-                stateCenterX = centerX - width / 2 + stateWidth / 2  + width * i /siteLength;
-
-                if(i% 2 == 0)
-                    stateCenterY = centerY - height /  2;
-                else
-                    stateCenterY = centerY + height / 2 ;
-
-                var state = {
-                    'site': site,
-                    'bbox': {'x': stateCenterX, 'y': stateCenterY, 'width': stateWidth, 'height': stateHeight}
-                };
-                node._private.data.sifStates.push(state);
-            }
-            ;
-        }
-
-
-
-
-    });
-}
 
 var SifCy = function(el, sifText, doTopologyGrouping) {
 
@@ -115,12 +73,16 @@ var SifCy = function(el, sifText, doTopologyGrouping) {
 
         ready: function () {
 
-            computeStatePositions();
 
-            cy.on('drag', 'node', function (e) {
-                computeStatePositions();
+            cy.on('select', 'node', function (e) {
+                console.log(this.data());
+                console.log(this.css());
             });
 
+            cy.on('select', 'edge', function (e) {
+                console.log(this.data());
+                console.log(this.css());
+            });
             cy.on('tapend', 'edge', function (e) {
 
                 var edge = this;

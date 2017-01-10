@@ -1,0 +1,74 @@
+{
+   "nodes": [
+      {
+         "data":{
+            "id": "A",
+            "tooltipText": "Protein"
+         },
+         "css": {
+                "backgroundColor": "blue",
+                "color": "black",
+                "borderWidth": "1px",
+                "borderColor": "black"
+         },
+         "sites": [
+            {
+               "siteText": "P",
+               "siteBackgroundColor": "orange",
+               "siteTextColor": "black",
+               "siteBorderColor": "black"
+            },
+            {
+               "siteText": "P",
+               "siteBackgroundColor": "orange",
+               "siteTextColor": "black",
+               "siteBorderColor": "black"
+            }
+         ]
+      },
+      {
+         "data":{
+                  "id": "B",
+                  "tooltipText": "Protein"
+         },
+         "css": {
+                 "backgroundColor": "blue",
+                 "color": "black",
+                 "borderWidth": "1px",
+                 "borderColor": "black"
+          },
+          "sites": [
+             {
+                "siteText": "P",
+                "siteBackgroundColor": "orange",
+                "siteTextColor": "black",
+                "siteBorderColor": "black"
+             },
+             {
+                "siteText": "P",
+                "siteBackgroundColor": "orange",
+                "siteTextColor": "black",
+                "siteBorderColor": "black"
+             }
+          ]
+      }
+   ],
+   "edges": [
+      {
+      "data":{
+            "source": "A",
+            "target": "B",
+            "edgeType": "interacts-with",
+            "tooltipText": "S12"
+         },
+         "css":{
+         "lineStyle": "dashed",
+         "width": "1px",
+         "lineColor": "black",
+         "targetArrowShape": "triangle"
+         }
+
+
+      }
+   ]
+}

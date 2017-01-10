@@ -49,7 +49,7 @@ body {
 
 }
 
-#sif-file-input{
+#graph-file-input{
 
     font-size:medium;
 }
@@ -60,20 +60,57 @@ body {
     font-size:small;
 }
 
-.sif-input-text{
+.input-text{
 
     font-size: small;
     align: left;
 }
 
 #sifBox{
+    height: 600px;
     width: calc( var(--input-width) - 2 * var(--margin-width));
 }
 
 
-/*.instructions{*/
-    /*color: peachpuff;*/
-    /*font-size:larger;*/
-    /*font-family: 'Lucida Grande', sans-serif;*/
-    /*font-stretch: expanded;*/
-/*}*/
+
+#cgfBox{
+    width: calc( var(--input-width) - 2 * var(--margin-width));
+    height: 600px;
+}
+
+.tab-link{
+
+    color: #444444;
+}
+
+
+/* Funda: don't forget to add this for fa file icons*/
+input[type="file"] {
+    display: none;
+}
+
+.causality-file{
+    /*border: 1px solid #ccc;*/
+    display: inline-block;
+    font-size: large;
+    /*padding: 6px 12px;*/
+    cursor: pointer;
+    padding-top: 5px;
+    background-color: #0b9bcd;
+    color: floralwhite;
+    /*border-radius: 5px;*/
+    width:calc( var(--input-width)/2);
+}
+
+.fa-file-text{
+    font-size: xx-large;
+}
+
+.instructions{
+    color:floralwhite;
+}
+
+.input-buttons{
+    font-size:medium;
+}
+
