@@ -24,6 +24,7 @@ var useQunit = true;
 var userCount;
 //var socket;
 
+app.modelManager = null;
 
 app.on('model', function (model) {
 
@@ -138,7 +139,7 @@ app.get('/:docId', function (page, model, arg, next) {
 
     });
 
-    model.subscribe(docPath, 'cgf', function(err){
+    model.subscribe(docPath, 'cy', function(err){
         if (err) {
             return next(err);
         }
@@ -270,6 +271,7 @@ app.proto.init = function (model) {
 
 
 
+
     if(model.get('_page.doc.sifText') == null){
 
         var sifText = "b controls-expression-of c\n";
@@ -324,6 +326,9 @@ app.proto.create = function (model) {
     var id = model.get('_session.userId');
     var name = model.get('users.' + id +'.name');
 
+    this.modelManager = require('./public/src/model/modelManager.js')(model, model.get('_page.room'), model.get('_session.userId'),name );
+
+
     this.atBottom = true;
 
     return model.on('all', '_page.list', (function (_this) {
@@ -353,16 +358,25 @@ app.proto.updateSifGraph = function(){
     var sifCy = require('./public/src/sif-visualizer/sif-cy.js')($('#graph-container'), sifText, doTopologyGrouping);
 }
 
-app.proto.updateCgfGraph = function(){
+/***
+ * @param cgfJson
+ * Create cytoscape graph from cgfJson
+ */
+app.proto.createCyGraphFromCgf = function(cgfJson){
 
-    var cgfJson = this.model.get('_page.doc.cgf');
+
     var doTopologyGrouping = this.model.get('_page.doc.doTopologyGrouping');
 
+    if(cgfJson == null){
+        var cgfText = this.model.get('_page.doc.cgfText');
+        cgfJson = JSON.parse(cgfText);
+    }
 
-    var cgfCy = require('./public/src/cgf-visualizer/cgf-cy.js')($('#graph-container'),  cgfJson, doTopologyGrouping);
+    require('./public/src/cgf-visualizer/cgf-cy.js')($('#graph-container'),  cgfJson, doTopologyGrouping, this.modelManager);
+    this.modelManager.initModelFromJson(cgfJson);
 }
 
-app.proto.loadGraphFile = function(){
+app.proto.loadGraphFile = function(e){
 
     var self = this;
 
@@ -379,11 +393,14 @@ app.proto.loadGraphFile = function(){
         else{
 
             self.model.set('_page.doc.cgfText', this.result);
-            self.model.set('_page.doc.cgf', JSON.parse(this.result));
-            self.updateCgfGraph(this.result);
+            self.createCyGraphFromCgf(JSON.parse(this.result));
+
+
+
         }
 
     };
+    //TODO: move graph-file-input to an argument
     reader.readAsText($("#graph-file-input")[0].files[0]);
 }
 

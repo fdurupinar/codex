@@ -2,70 +2,72 @@
    "nodes": [
       {
          "data":{
-            "id": "A",
-            "tooltipText": "Protein"
+            "id": "1",
+            "text":"A",
+            "tooltipText": "Protein",
+
+            "sites": [
+                        {
+                           "siteText": "P",
+                           "siteBackgroundColor": "mediumvioletred",
+                           "siteTextColor": "seagreen",
+                           "siteBorderColor": "khaki"
+                        },
+                        {
+                           "siteText": "P",
+                           "siteBackgroundColor": "salmon",
+                           "siteTextColor": "darkmagenta",
+                           "siteBorderColor": "purple"
+                        }
+                     ]
          },
          "css": {
-                "backgroundColor": "blue",
-                "color": "black",
+                "backgroundColor": "lightblue",
+                "color": "cadetblue",
                 "borderWidth": "1px",
-                "borderColor": "black"
-         },
-         "sites": [
-            {
-               "siteText": "P",
-               "siteBackgroundColor": "orange",
-               "siteTextColor": "black",
-               "siteBorderColor": "black"
-            },
-            {
-               "siteText": "P",
-               "siteBackgroundColor": "orange",
-               "siteTextColor": "black",
-               "siteBorderColor": "black"
-            }
-         ]
+                "borderColor": "ghostwhite"
+         }
+
       },
       {
          "data":{
-                  "id": "B",
-                  "tooltipText": "Protein"
+                  "id": "2",
+                  "text":"B",
+                  "tooltipText": "Protein",
+                  "sites": [
+                               {
+                                  "siteText": "P",
+                                  "siteBackgroundColor": "crimson",
+                                  "siteTextColor": "black",
+                                  "siteBorderColor": "azure"
+                               },
+                               {
+                                  "siteText": "P",
+                                  "siteBackgroundColor": "coral",
+                                  "siteTextColor": "black",
+                                  "siteBorderColor": "rosyBrown"
+                               }
+                            ]
          },
          "css": {
-                 "backgroundColor": "blue",
-                 "color": "black",
+                 "backgroundColor": "mistyrose",
+                 "color": "lavenderblush",
                  "borderWidth": "1px",
-                 "borderColor": "black"
-          },
-          "sites": [
-             {
-                "siteText": "P",
-                "siteBackgroundColor": "orange",
-                "siteTextColor": "black",
-                "siteBorderColor": "black"
-             },
-             {
-                "siteText": "P",
-                "siteBackgroundColor": "orange",
-                "siteTextColor": "black",
-                "siteBorderColor": "black"
-             }
-          ]
+                 "borderColor": "honeydew"
+          }
+
       }
    ],
    "edges": [
       {
       "data":{
-            "source": "A",
-            "target": "B",
-            "edgeType": "interacts-with",
+            "source": "1",
+            "target": "2",
+            "edgeType": "controls-phosphorylation-of",
             "tooltipText": "S12"
          },
          "css":{
-         "lineStyle": "dashed",
-         "width": "1px",
-         "lineColor": "black",
-         "targetArrowShape": "triangle"
+         "width": "1px"
          }
 
 

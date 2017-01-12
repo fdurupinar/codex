@@ -3191,7 +3191,39 @@ var boundingBoxImpl = function( ele, options ){
           maxX = stateMaxX;
         }
       }
-      
+      //FUNDA extension for causality graphs
+      var sites = ele._private.data.sites;
+
+      for (var i = 0; sites && i < sites.length; i++) {
+        var state = sites[i];
+        if(state.bbox) {
+          var stateWidth = state.bbox.w;
+          var stateHeight = state.bbox.h;
+
+          var stateMinY = state.bbox.y  - stateHeight /2 ;
+          var stateMaxY = state.bbox.y   + stateHeight /2;
+
+          var stateMinX = state.bbox.x   - stateWidth /2;
+          var stateMaxX = state.bbox.x  + stateWidth /2;
+
+          if (!minY || stateMinY < minY) {
+            minY = stateMinY;
+          }
+
+          if (!maxY || stateMaxY > maxY) {
+            maxY = stateMaxY;
+          }
+
+          if (!minX || stateMinX < minX) {
+            minX = stateMinX;
+          }
+
+          if (!maxX || stateMaxX > maxX) {
+            maxX = stateMaxX;
+          }
+        }
+      }
+
       for( var i = 0; ports && i < ports.length; i++ ) {
         var port = ports[i];
         var portX = x + port.x * ele.width() / 100;
