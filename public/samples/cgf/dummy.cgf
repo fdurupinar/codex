@@ -15,6 +15,7 @@
                         },
                         {
                            "siteText": "P",
+                           "siteInfo": "Phosphorylates at S34",
                            "siteBackgroundColor": "salmon",
                            "siteTextColor": "darkmagenta",
                            "siteBorderColor": "purple"
@@ -37,12 +38,14 @@
                   "sites": [
                                {
                                   "siteText": "P",
+                                  "siteInfo": "Phosphorylates at S12",
                                   "siteBackgroundColor": "crimson",
                                   "siteTextColor": "black",
                                   "siteBorderColor": "azure"
                                },
                                {
                                   "siteText": "P",
+                                  "siteInfo": "Phosphorylates at S23",
                                   "siteBackgroundColor": "coral",
                                   "siteTextColor": "black",
                                   "siteBorderColor": "rosyBrown"

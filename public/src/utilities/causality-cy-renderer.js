@@ -136,7 +136,11 @@
 
 
 
-                        context.fillStyle = site.siteBackgroundColor;
+                        if(site.selected)
+                            context.fillStyle = "#FFCC66";
+                        else
+                            context.fillStyle = site.siteBackgroundColor;
+
                         context.strokeStyle = site.siteBorderColor;
                         window.cyRenderer.drawEllipsePath(context,  siteCenterX, siteCenterY, siteWidth, siteHeight);
                         context.fill();

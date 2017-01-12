@@ -203,6 +203,40 @@ function computeSitePositions(){
 
     });
 }
+/***
+ * Find the site that the user clicked and add it a selected parameter
+ * @param pos : mouse position
+ * @param node : selected node
+ * @returns selected site
+ */
+function selectAndReturnSite(pos,  node){
+
+    if(!node._private.data.sites)
+        return null;
+
+    for(var i = 0; i < node._private.data.sites.length; i++){
+        var site = node._private.data.sites[i];
+        if(pos.x >= (site.bbox.x - site.bbox.w/2) && pos.x <= (site.bbox.x + site.bbox.w/2) &&
+           pos.y >= (site.bbox.y - site.bbox.h/2) && pos.y <= (site.bbox.y + site.bbox.h/2)){
+            site.selected = true;
+            return site;
+        }
+    }
+    return null;
+}
+
+/***
+ * Unselect the sites of node
+ * @param node
+ */
+function unselectAllSites(node) {
+    if (!node._private.data.sites)
+        return;
+
+    node._private.data.sites.forEach(function(site){
+        site.selected = false;
+    });
+}
 
 var CgfCy = function(el, cgfJson, doTopologyGrouping, modelManager) {
 
@@ -254,6 +288,57 @@ var CgfCy = function(el, cgfJson, doTopologyGrouping, modelManager) {
                 //get original background color
                 var backgroundColor = modelManager.getModelNodeAttribute(this.id(), 'css.backgroundColor');
                 this.css('background-color', backgroundColor);
+
+
+                unselectAllSites(this);
+            });
+
+            cy.on('tap', 'node', function(e) {
+
+                var site = selectAndReturnSite(e.cyPosition, e.cyTarget);
+
+
+
+
+                if (site) {
+                    if(!site.siteInfo)
+                        site.siteInfo = '';
+                    cy.$(('#' + this.id())).qtip({
+                        content: {
+                            text: function (event, api) {
+
+
+
+                                console.log(site.siteInfo);
+                                return site.siteInfo;
+
+
+                            }
+                        },
+                        show: {
+                            ready: true
+                        },
+                        position: {
+
+
+                            // target: 'event',
+                             my: 'center',
+                             at: 'center',
+
+                            adjust: {
+                                cyViewport: true
+                            },
+                            effect: false
+                        },
+                        style: {
+                            classes: 'qtip-bootstrap',
+                            tip: {
+                                width: 20,
+                                height: 20
+                            }
+                        }
+                    });
+                }
             });
 
 
