@@ -120,8 +120,7 @@ app.get('/:docId', function (page, model, arg, next) {
             id: arg.docId
 
         });
-        // create a reference to the document
-        model.ref('_page.doc', 'documents.' + arg.docId);
+
 
     });
 
@@ -134,8 +133,7 @@ app.get('/:docId', function (page, model, arg, next) {
             id: arg.docId
 
         });
-        // create a reference to the document
-        model.ref('_page.doc', 'documents.' + arg.docId);
+
 
     });
 
@@ -328,6 +326,10 @@ app.proto.create = function (model) {
 
     this.modelManager = require('./public/src/model/modelManager.js')(model, model.get('_page.room'), model.get('_session.userId'),name );
 
+    var cgfJson = model.get('_page.doc.cy');
+    if(cgfJson){
+        this.createCyGraphFromCgf(cgfJson);
+    }
 
     this.atBottom = true;
 
@@ -373,7 +375,9 @@ app.proto.createCyGraphFromCgf = function(cgfJson){
     }
 
     require('./public/src/cgf-visualizer/cgf-cy.js')($('#graph-container'),  cgfJson, doTopologyGrouping, this.modelManager);
+
     this.modelManager.initModelFromJson(cgfJson);
+
 }
 
 app.proto.loadGraphFile = function(e){
@@ -458,7 +462,6 @@ app.proto.add = function (model, filePath) {
 
 
 };
-
 
 
 

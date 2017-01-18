@@ -9,6 +9,7 @@ body {
     --input-width: 400px;
     --graph-width: 1000px;
     --margin-width: 10px;
+    --total-height: 1100px;
 }
 
 #banner{
@@ -17,7 +18,7 @@ body {
     width:  calc( var(--input-width) + var(--graph-width) + var(--margin-width));
     background-color: #7d7d80;
     margin:10px;
-    padding-top: 30px;
+    padding-top: 10px;
     text-align: center;
     font-size: xx-large;
     color:floralwhite;
@@ -25,10 +26,10 @@ body {
 #input-container{
 
     position: absolute;
-    top: 120px;
+    top: 100px;
     width: var(--input-width);
     padding: 10px;
-    height: 1000px;
+    height: var(--total-height);
     margin: var(--margin-width);
 
     color: #444444;
@@ -40,10 +41,10 @@ body {
 #graph-container{
 
     position: absolute;
-    top: 120px;
+    top: 100px;
     border: 1px solid #ddd;
     width: var(--graph-width);
-    height: 1000px;
+    height: var(--total-height);
     left: calc( var(--input-width) + var(--margin-width));
     margin: var(--margin-width);
 

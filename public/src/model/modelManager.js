@@ -204,10 +204,7 @@ module.exports =  function(model, docId, userId, userName) {
             else if(cmd.opName == "new"){ //delete all
                 this.newModel();
             }
-            else if(cmd.opName == "merge"){ //delete all
-                this.restoreModel(cmd.param);
 
-            }
 
 
             undoInd = undoInd <  model.get('_page.doc.history').length -1 ? undoInd + 1  : model.get('_page.doc.history').length -1;
@@ -217,14 +214,30 @@ module.exports =  function(model, docId, userId, userName) {
         },
 
 
-        getModelNode: function(id){
-            var nodePath = model.at('_page.doc.cy.nodes.'  + id);
-            return nodePath.get();
+        getModelNodePath: function(id){
+            var nodes = model.get('_page.doc.cy.nodes');
+            for(var i = 0; i < nodes.length; i++){
+                if(nodes[i].data.id == id){
+                    return model.at('_page.doc.cy.nodes.' + i);
+
+                }
+            }
+
+
+            return null;
         },
 
 
+        /***
+         * Attributes are in the form of attr1.attr2.attr3
+         * @param id
+         * @param attributeName
+         * @returns {*}
+         */
         getModelNodeAttribute: function(id, attributeName){
-            return model.get('_page.doc.cy.nodes.'  + id + '.' + attributeName);
+            var nodePath = this.getModelNodePath(id);
+            return nodePath.get(attributeName);
+
         },
 
 
@@ -739,50 +752,60 @@ module.exports =  function(model, docId, userId, userName) {
         initModelFromJson: function(jsonObj, user, noHistUpdate){
 
             var self = this;
-            var elIds = "";
-            var elTypes = [];
 
 
-            jsonObj.nodes.forEach(function(node){
-
-                self.updateHistory({opName:'init', opTarget:'element', elType:'node', elId: node.data.id});
-
-
-                model.set('_page.doc.cy.nodes.' + node.data.id + '.id', node.data.id);
-                model.set('_page.doc.cy.nodes.' + node.data.id , node);
-
-                elIds += node.data.id + " ";
-                elTypes.push("node");
-
-            });
-
-
-            jsonObj.edges.forEach(function(edge){
-
-                self.updateHistory({opName:'init', opTarget:'element', elType:'edge', elId: edge.data.id});
-
-
-                model.set('_page.doc.cy.edges.' + edge.data.id + '.id', edge.data.id);
-                model.set('_page.doc.cy.edges.' + edge.data.id , edge);
+            model.set('_page.doc.cy', jsonObj);
+            //
+            //
+            // for(var i = 0; i < jsonObj.nodes.length; i++){
+            //
+            //     console.log(model.get('_page.doc.cy.nodes'));
+            //     var node = jsonObj.nodes[i];
+            //
+            //     //self.updateHistory({opName:'init', opTarget:'element', elType:'node', elId: node.data.id});
+            //
+            //     model.set('_page.doc.cy.nodes.' + node.data.id + '.id', node.data.id);
+            //  //   model.set('_page.doc.cy.nodes.' + node.data.id  + '.data' , node.data);
+            //  //   model.set('_page.doc.cy.nodes.' + node.data.id  + '.css' , node.css);
+            //
+            //     console.log(model.get('_page.doc.cy.nodes'));
+            // };
 
 
-                elIds += edge.data.id + " ";
-
-                elTypes.push("edge");
-            });
+            // for(var i = 0; i < jsonObj.edges.length; i++){
+            //
+            //     var edge = jsonObj.edges[i];
+            //
+            //     //self.updateHistory({opName:'init', opTarget:'element', elType:'edge', elId: edge.data.id});
+            //
+            //     model.set('_page.doc.cy.edges.' + edge.data.id + '.id', edge.data.id);
+            //     model.set('_page.doc.cy.edges.' + edge.data.id  + '.data', edge.data);
+            //     model.set('_page.doc.cy.edges.' + edge.data.id  + '.css', edge.css);
+            //
+            //
+            // };
 
             var self = this;
 
 
             var newModelCy = model.get('_page.doc.cy');
 
+            // console.log(jsonObj);
+            // console.log(newModelCy);
+
             if(!noHistUpdate){
                 this.updateHistory({opName:'init',  param: newModelCy,  opTarget:'model'});
             }
-
-
         },
 
+        initModelNodePositions:function(nodes){
+
+
+                for(var i = 0; i < nodes.length; i++){
+                    model.set('_page.doc.cy.nodes.' + i +'.position', nodes[i]._private.position);
+
+                }
+        },
         // /***
         //  *
         //  * @param nodes: cytoscape nodes

@@ -167,9 +167,6 @@
 
 
 
-
-
-
                 //FIXME
                 //This is a temporary workaround for drawing order
                 $$.sbgn.drawEllipse(context, centerX, centerY, 0, 0);

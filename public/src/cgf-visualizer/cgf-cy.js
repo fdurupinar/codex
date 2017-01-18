@@ -130,16 +130,9 @@ var CgfStyleSheet = cytoscape.stylesheet()
 
 function convertCgfToCytoscape(cgfJson, doTopologyGrouping){
 
-    // var nodes = [];
-   //  cgfJson.nodes.forEach(function (node) {
-   //      var newNode = {data:node.data};
-   //
-   // //     nodes.push(newNode);
-   //      nodes.push(node);
-   //
-   //  });
 
-     var edges = [];
+
+    var edges = [];
     cgfJson.edges.forEach(function(edge){
         var id = edge.data.source + "-" + edge.data.target;
         var newEdge = edge;
@@ -159,7 +152,9 @@ function convertCgfToCytoscape(cgfJson, doTopologyGrouping){
         return cyElements;
 
 }
-
+/***
+ * Distribute sites around the node evenly
+ */
 function computeSitePositions(){
 
 
@@ -274,7 +269,9 @@ var CgfCy = function(el, cgfJson, doTopologyGrouping, modelManager) {
         ready: function () {
 
             computeSitePositions();
-       //     cy.fit(); //call for updating bounding boxes for sites
+
+           // modelManager.initModelNodePositions(cy.nodes());
+
 
             cy.on('drag', 'node', function (e) {
                 computeSitePositions();
@@ -300,45 +297,64 @@ var CgfCy = function(el, cgfJson, doTopologyGrouping, modelManager) {
 
 
 
-                if (site) {
-                    if(!site.siteInfo)
-                        site.siteInfo = '';
+                if (site != null && site.siteInfo) {
+
+                    //Adjust the positions of qtip boxes
+                    var sitePosX = site.bbox.x - this._private.position.x;
+                    var sitePosY = site.bbox.y - this._private.position.y;
+
+                    var my;
+                    var at;
+
+                    if(sitePosX < 0 && sitePosY < 0) {
+                        my = "bottom right";
+                        at = "top left";
+                    }
+                    else if(sitePosX < 0 && sitePosY >= 0) {
+                        my = "bottom right";
+                        at = "bottom left";
+                    }
+                    else if(sitePosX >= 0 && sitePosY >= 0) {
+                        my = "bottom left";
+                        at = "bottom right";
+                    }
+                    else if(sitePosX >= 0 && sitePosY < 0) {
+                        my = "bottom left";
+                        at = "top right";
+                    }
+
                     cy.$(('#' + this.id())).qtip({
                         content: {
                             text: function (event, api) {
-
-
-
-                                console.log(site.siteInfo);
                                 return site.siteInfo;
-
-
                             }
                         },
                         show: {
                             ready: true
                         },
                         position: {
-
-
-                            // target: 'event',
-                             my: 'center',
-                             at: 'center',
-
+                            my: my,
+                            at: at,
                             adjust: {
                                 cyViewport: true
+
                             },
                             effect: false
                         },
                         style: {
                             classes: 'qtip-bootstrap',
                             tip: {
+                                corner: false,
                                 width: 20,
                                 height: 20
                             }
                         }
                     });
                 }
+            });
+
+            cy.on('tapend', 'node', function(e){
+                $('.qtip').remove();
             });
 
 
