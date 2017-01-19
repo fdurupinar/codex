@@ -62,13 +62,13 @@ function attributeMap(edgeType){
             break;
         case "downregulates-expression":
             attributes["lineStyle"]= "dashed";
-            attributes["color"] =  "purple";
+            attributes["color"] =  "red";
             break;
         case "phosphorylates":
-            attributes["color"] =  "cornflowerblue";
+            attributes["color"] =  "green";
             break;
         case "dephosphorylates":
-            attributes["color"] =  "coral";
+            attributes["color"] =  "red";
             break;
         default:
             attributes["color"] =  'gray';
@@ -183,10 +183,10 @@ function convertCgfToCytoscape(cgfJson, doTopologyGrouping){
 /***
  * Distribute sites around the node evenly
  */
-function computeSitePositions(){
+function computeSitePositions(node){
 
 
-    cy.nodes().forEach(function(node) {
+
         if(node._private.data.sites) {
             var siteLength = node._private.data.sites.length;
             for (var i = 0; i < siteLength; i++) {
@@ -225,8 +225,11 @@ function computeSitePositions(){
 
 
 
-    });
+
 }
+
+
+
 /***
  * Find the site that the user clicked and add it a selected parameter
  * @param pos : mouse position
@@ -261,8 +264,29 @@ function unselectAllSites(node) {
         site.selected = false;
     });
 }
+module.exports.runLayout = function(){
+    var options =  {
+        animate: false,
+        fit: true,
+        randomize: false,
+        nodeRepulsion: 4500,
+        idealEdgeLength: 50,
+        edgeElasticity: 0.45,
+        nestingFactor: 0.1,
+        gravity: 0.25,
+        numIter: 5000,
+        tile: true,
+        tilingPaddingVertical: 5,
+        tilingPaddingHorizontal: 5,
+        name: 'cose-bilkent'
 
-var CgfCy = function(el, cgfJson, doTopologyGrouping, modelManager) {
+    };
+    cy.layout(options);
+
+
+}
+
+module.exports.createContainer = function(el, cgfJson, doTopologyGrouping, modelManager) {
 
     var cyElements = convertCgfToCytoscape(cgfJson, doTopologyGrouping);
 
@@ -297,17 +321,22 @@ var CgfCy = function(el, cgfJson, doTopologyGrouping, modelManager) {
 
         ready: function () {
 
-            computeSitePositions();
+            cy.on('layoutstop', function() {
+                cy.nodes().forEach(function (node) {
+                    computeSitePositions(node);
+                });
+            });
 
             modelManager.initModelNodePositions(cy.nodes());
 
-            cgfJson.nodes.forEach(function(node){
-                if(node.position)
-                    cy.getElementById(node.data.id)._private.data.position = node.position;
-            })
+            // cgfJson.nodes.forEach(function(node){
+            //     if(node.position)
+            //         cy.getElementById(node.data.id)._private.data.position = node.position;
+            // })
 
             cy.on('drag', 'node', function (e) {
-                computeSitePositions();
+                computeSitePositions(this);
+
             });
 
             cy.on('select', 'node', function(e){
@@ -460,7 +489,7 @@ var CgfCy = function(el, cgfJson, doTopologyGrouping, modelManager) {
 }
 
 
-
-if (typeof module !== 'undefined' && module.exports) { // expose as a commonjs module
-    module.exports = CgfCy;
-}
+//
+// if (typeof module !== 'undefined' && module.exports) { // expose as a commonjs module
+//     module.exports = CgfCy;
+// }

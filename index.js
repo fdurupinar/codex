@@ -26,6 +26,8 @@ var userCount;
 
 app.modelManager = null;
 
+var cgfCy;
+
 app.on('model', function (model) {
 
 
@@ -319,6 +321,7 @@ app.proto.create = function (model) {
 
     docReady = true;
 
+    cgfCy = require('./public/src/cgf-visualizer/cgf-cy.js');
     //socket = io();
 
     var id = model.get('_session.userId');
@@ -345,6 +348,15 @@ app.proto.create = function (model) {
     })(this));
 };
 
+app.proto.runLayout = function(){
+
+
+
+    if(docReady)
+        cgfCy.runLayout();
+
+
+}
 app.proto.clearSifText = function(){
     this.model.set('_page.doc.sifText','');
 }
@@ -380,6 +392,16 @@ function convertModelJsonToCgfJson(modelJson){
     }
     return {nodes:nodes, edges:edges};
 }
+
+
+app.proto.reloadGraph = function(){
+
+    cy.destroy();
+    var cgfText = this.model.get('_page.doc.cgfText');
+    this.createCyGraphFromCgf(JSON.parse(cgfText));
+
+
+}
 /***
  * @param cgfJson
  * Create cytoscape graph from cgfJson
@@ -394,7 +416,7 @@ app.proto.createCyGraphFromCgf = function(cgfJson){
         cgfJson = JSON.parse(cgfText);
     }
 
-    require('./public/src/cgf-visualizer/cgf-cy.js')($('#graph-container'),  cgfJson, doTopologyGrouping, this.modelManager);
+    cgfCy.createContainer($('#graph-container'),  cgfJson, doTopologyGrouping, this.modelManager);
 
     this.modelManager.initModelFromJson(cgfJson);
 

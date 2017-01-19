@@ -26,8 +26,12 @@ function groupTopology(cyElements){
     for(var i = 0; i < nodes.length; i++){
         for(var j = i+1; j < nodes.length; j++){
 
+            if(nodes[i].data.id == "LIG3" && nodes[j].data.id == "PTPN2" ||  nodes[j].data.id== "LIG3" && nodes[i].data.id == "PTPN2")
+                var a = 1;
+
 
             if(areNodesAnalogous(nodes[i],nodes[j],edges)) {
+
                 if(nodes[i].data.parent!=null) { //already added in the newnode list
                     nodes[j].data.parent = nodes[i].data.parent;
                     newNodes.forEach(function(newNode){

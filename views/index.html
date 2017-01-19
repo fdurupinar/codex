@@ -46,7 +46,7 @@
 
 
     <!--Source code-->
-
+    <script src="./src/utilities/cy-helper-functions.js"></script>
     <script src="./src/utilities/topology-grouping.js"></script>
     <script src="./src/utilities/causality-cy-renderer.js"></script>
 
@@ -106,9 +106,13 @@
 
 
                 <tr>
-                    <td class = "check-grouping"><input type="checkbox" id = "sif-topology-grouping" checked = "{{_page.doc.doTopologyGrouping}}"> Topology grouping</td>
+                    <td class = "check-grouping"><input type="checkbox" id = "sif-topology-grouping" checked = "{{_page.doc.doTopologyGrouping}}" on-change = "reloadGraph()"> Topology grouping</td>
                 </tr>
 
+
+                <tr>
+                    <td class = "check-grouping"><input type="button" id = "run-layout" value = "Run Layout" on-click = "runLayout()"> </td>
+                </tr>
 
                 </tbody>
 
