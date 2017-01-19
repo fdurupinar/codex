@@ -326,10 +326,11 @@ app.proto.create = function (model) {
 
     this.modelManager = require('./public/src/model/modelManager.js')(model, model.get('_page.room'), model.get('_session.userId'),name );
 
-    var cgfJson = model.get('_page.doc.cy');
-    if(cgfJson){
-        this.createCyGraphFromCgf(cgfJson);
-    }
+     var modelJson = model.get('_page.doc.cy');
+     if(modelJson){
+         var cgfJson = convertModelJsonToCgfJson(modelJson);
+         this.createCyGraphFromCgf(cgfJson);
+     }
 
     this.atBottom = true;
 
@@ -361,6 +362,25 @@ app.proto.updateSifGraph = function(){
 }
 
 /***
+ * Returns nodes and edges in an array
+ * @param modelJson keeps nodes and edges as a hash table of objects
+ */
+function convertModelJsonToCgfJson(modelJson){
+    var nodes = [];
+    var edges = [];
+    for(var att in modelJson.nodes){
+        if(modelJson.nodes.hasOwnProperty(att)){
+            nodes.push(modelJson.nodes[att]);
+        }
+    }
+    for(var att in modelJson.edges){
+        if(modelJson.edges.hasOwnProperty(att)){
+            edges.push(modelJson.edges[att]);
+        }
+    }
+    return {nodes:nodes, edges:edges};
+}
+/***
  * @param cgfJson
  * Create cytoscape graph from cgfJson
  */
@@ -379,6 +399,7 @@ app.proto.createCyGraphFromCgf = function(cgfJson){
     this.modelManager.initModelFromJson(cgfJson);
 
 }
+
 
 app.proto.loadGraphFile = function(e){
 

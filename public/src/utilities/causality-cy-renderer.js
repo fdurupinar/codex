@@ -152,6 +152,8 @@
                         var fontSize =  parseInt(siteHeight / 1.5);
                         textProp.font = fontSize + "px Arial";
                         textProp.color = site.siteTextColor;
+                        if(!textProp.color)
+                            textProp.color = 'black';
                         textProp.label = site.siteText;
                         textProp.centerX = siteCenterX;
                         textProp.centerY = siteCenterY;

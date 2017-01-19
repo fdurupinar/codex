@@ -1,6 +1,6 @@
 <Title:>
 
-        Proteomics Analysis Tool - {{_session.userId}}
+    CODEX - Collaborative Data Explanation Tool - {{_session.userId}}
 
 
 <Head:>
@@ -97,7 +97,7 @@
                                 <i class="fa fa-file-text"></i> Open
                             </label>
 
-                            <div><input type="file" id="graph-file-input" accept=".txt,.sif, .cgf" on-change = "loadGraphFile($event)" value ={_page.newFile} ></div>
+                            <div><input type="file" id="graph-file-input" accept=".txt,.sif, .cgf, .json" on-change = "loadGraphFile($event)" value ={_page.newFile} ></div>
                         </div>
                     </td>
                     <!--</td>-->
@@ -108,6 +108,8 @@
                 <tr>
                     <td class = "check-grouping"><input type="checkbox" id = "sif-topology-grouping" checked = "{{_page.doc.doTopologyGrouping}}"> Topology grouping</td>
                 </tr>
+
+
                 </tbody>
 
             </table>

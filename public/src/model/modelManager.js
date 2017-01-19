@@ -235,8 +235,7 @@ module.exports =  function(model, docId, userId, userName) {
          * @returns {*}
          */
         getModelNodeAttribute: function(id, attributeName){
-            var nodePath = this.getModelNodePath(id);
-            return nodePath.get(attributeName);
+            return model.get('_page.doc.nodes.' + id + '.' + attributeName);
 
         },
 
@@ -754,36 +753,36 @@ module.exports =  function(model, docId, userId, userName) {
             var self = this;
 
 
-            model.set('_page.doc.cy', jsonObj);
-            //
-            //
-            // for(var i = 0; i < jsonObj.nodes.length; i++){
-            //
-            //     console.log(model.get('_page.doc.cy.nodes'));
-            //     var node = jsonObj.nodes[i];
-            //
-            //     //self.updateHistory({opName:'init', opTarget:'element', elType:'node', elId: node.data.id});
-            //
-            //     model.set('_page.doc.cy.nodes.' + node.data.id + '.id', node.data.id);
-            //  //   model.set('_page.doc.cy.nodes.' + node.data.id  + '.data' , node.data);
-            //  //   model.set('_page.doc.cy.nodes.' + node.data.id  + '.css' , node.css);
-            //
-            //     console.log(model.get('_page.doc.cy.nodes'));
-            // };
+     //       model.set('_page.doc.cy', jsonObj);
 
 
-            // for(var i = 0; i < jsonObj.edges.length; i++){
-            //
-            //     var edge = jsonObj.edges[i];
-            //
-            //     //self.updateHistory({opName:'init', opTarget:'element', elType:'edge', elId: edge.data.id});
-            //
-            //     model.set('_page.doc.cy.edges.' + edge.data.id + '.id', edge.data.id);
-            //     model.set('_page.doc.cy.edges.' + edge.data.id  + '.data', edge.data);
-            //     model.set('_page.doc.cy.edges.' + edge.data.id  + '.css', edge.css);
-            //
-            //
-            // };
+            //Keep a hash of nodes by their ids as keys
+            for(var i = 0; i < jsonObj.nodes.length; i++){
+
+            //    console.log(model.get('_page.doc.cy.nodes'));
+                var node = jsonObj.nodes[i];
+
+                //self.updateHistory({opName:'init', opTarget:'element', elType:'node', elId: node.data.id});
+                model.set('_page.doc.cy.nodes.' + node.data.id + '.id', node.data.id);
+                model.set('_page.doc.cy.nodes.' + node.data.id  + '.data' , node.data);
+                model.set('_page.doc.cy.nodes.' + node.data.id  + '.css' , node.css);
+
+            };
+
+
+            //Keep a hash of edges by their ids as keys
+            for(var i = 0; i < jsonObj.edges.length; i++){
+
+                var edge = jsonObj.edges[i];
+
+                //self.updateHistory({opName:'init', opTarget:'element', elType:'edge', elId: edge.data.id});
+
+                model.set('_page.doc.cy.edges.' + edge.data.id + '.id', edge.data.id);
+                model.set('_page.doc.cy.edges.' + edge.data.id  + '.data', edge.data);
+                model.set('_page.doc.cy.edges.' + edge.data.id  + '.css', edge.css);
+
+
+            };
 
             var self = this;
 
@@ -802,63 +801,11 @@ module.exports =  function(model, docId, userId, userName) {
 
 
                 for(var i = 0; i < nodes.length; i++){
-                    model.set('_page.doc.cy.nodes.' + i +'.position', nodes[i]._private.position);
+                    model.set('_page.doc.cy.nodes.' + nodes[i].id() +'.position', nodes[i]._private.position);
 
                 }
         },
-        // /***
-        //  *
-        //  * @param nodes: cytoscape nodes
-        //  * @param edges: cytoscape edges
-        //  */
-        // initCyFromModel: function(nodes, edges){
-        //     nodes.forEach(function(node){
-        //         var nodePath = model.at('_page.doc.cy.nodes.'  + node.id());
-        //         var modelData = nodePath.get('data');
-        //         if(modelData)
-        //             node.data(modelData); //assign data directly
-        //
-        //         //Assign css properties separately
-        //         var nodePathCss = model.at('_page.doc.cy.nodes.'  + node.id() + '.css');
-        //         if(nodePathCss){
-        //             var backgroundColor = nodePathCss.get('backgroundColor');
-        //             if(backgroundColor)
-        //                 node.css('background-color', backgroundColor);
-        //
-        //             var borderColor = nodePathCss.get('borderColor');
-        //             if(borderColor)
-        //                 node.css('border-color', borderColor);
-        //
-        //             var borderWidth = nodePathCss.get('borderWidth');
-        //             if(borderWidth)
-        //                 node.css('border-width', borderWidth);
-        //
-        //             var color = nodePathCss.get('color');
-        //             if(color)
-        //                 node.css('color', color);
-        //
-        //         }
-        //     });
-        //
-        //     edges.forEach(function(edge){
-        //         var edgePath = model.at('_page.doc.cy.edges.'  + edge.id());
-        //         var modelData = edgePath.get('data');
-        //         if(modelData)
-        //             edge.data(modelData); //assign data directly
-        //
-        //         //Assign css properties separately
-        //         var edgePathCss = model.at('_page.doc.cy.edges.'  + edge.id() + '.css');
-        //         if(edgePathCss){
-        //
-        //             var width = edgePathCss.get('width');
-        //             if(width)
-        //                 edge.css('width', width);
-        //
-        //         }
-        //     });
-        //
-        //
-        // },
+
 
 
         setRollbackPoint: function(){

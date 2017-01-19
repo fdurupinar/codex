@@ -56,6 +56,20 @@ function attributeMap(edgeType){
         case "used-to-produce":
             attributes["color"] =  "green";
             break;
+        case "upregulates-expression":
+            attributes["lineStyle"]= "dashed";
+            attributes["color"] =  "green";
+            break;
+        case "downregulates-expression":
+            attributes["lineStyle"]= "dashed";
+            attributes["color"] =  "purple";
+            break;
+        case "phosphorylates":
+            attributes["color"] =  "cornflowerblue";
+            break;
+        case "dephosphorylates":
+            attributes["color"] =  "coral";
+            break;
         default:
             attributes["color"] =  'gray';
             break;
@@ -73,6 +87,7 @@ var CgfStyleSheet = cytoscape.stylesheet()
         'shape': 'cgfNode',
         'text-halign': 'center',
         'text-valign':'center',
+        'background-color': 'white',
 
         'width': function(ele){
             var spacing =(ele.data('id').length +2) * 10;
@@ -101,12 +116,13 @@ var CgfStyleSheet = cytoscape.stylesheet()
         'target-arrow-color': function(ele){
             return attributeMap(ele.data('edgeType')).color;
         },
-        'target-arrow-shape': function(ele) {
-            if (ele.data('edgeType') == "in-complex-with" || ele.data('edgeType') == "interacts-with" || //nondirected
-                ele.data('edgeType') == "neighbor-of" || ele.data('edgeType') == "reacts-with")
-                return 'none';
-            return 'cgfArrow';
-        },
+        'target-arrow-shape':'triangle',
+        //     function(ele) {
+        //     if (ele.data('edgeType') == "in-complex-with" || ele.data('edgeType') == "interacts-with" || //nondirected
+        //         ele.data('edgeType') == "neighbor-of" || ele.data('edgeType') == "reacts-with")
+        //         return 'none';
+        //     return 'cgfArrow';
+        // },
         'arrow-size':5,
         'opacity': 0.8
     })
@@ -117,13 +133,25 @@ var CgfStyleSheet = cytoscape.stylesheet()
         'source-arrow-color': 'black',
         'opacity': 1
     })
-    .selector("node[children]")
+
+    .selector("node:parent")
     .css({
-        'text-valign': 'bottom',
-        'content': 'data(edgeType)',
+         'text-valign': 'bottom',
+         'content': 'data(edgeType)', //there is a label when there's a clique among the nodes inside the compound
         'font-size': 8,
 
-    });
+    })
+    .selector("node:child")
+    .css({
+
+        'padding-top': '10px',
+        'padding-bottom': '10px',
+        'padding-left': '10px',
+        'padding-right': '10px',
+
+
+    })
+    ;
 
 
 
@@ -163,11 +191,12 @@ function computeSitePositions(){
             var siteLength = node._private.data.sites.length;
             for (var i = 0; i < siteLength; i++) {
                 var site = node._private.data.sites[i];
+                var paddingCoef = 0.9 ;
 
 
                 var centerX = node._private.position.x;
                 var centerY = node._private.position.y;
-                var width = node.width();
+                var width = node.width() * paddingCoef;
                 var height = node.height();
                 var siteCenterX;
                 var siteCenterY;
@@ -175,7 +204,7 @@ function computeSitePositions(){
                 var siteWidth = 10;
                 var siteHeight = 10;
 
-                siteCenterX = centerX - width / 2 + siteWidth / 2  + width * i /siteLength;
+                siteCenterX = centerX - width / 2 + siteWidth / 2  + width * i /siteLength ;
 
                 if(i% 2 == 0)
                     siteCenterY = centerY - height /  2;
@@ -254,7 +283,7 @@ var CgfCy = function(el, cgfJson, doTopologyGrouping, modelManager) {
             edgeElasticity: 0.45,
             nestingFactor: 0.1,
             gravity: 0.25,
-            numIter: 2500,
+            numIter: 5000,
             tile: true,
             tilingPaddingVertical: 5,
             tilingPaddingHorizontal: 5,
@@ -270,8 +299,12 @@ var CgfCy = function(el, cgfJson, doTopologyGrouping, modelManager) {
 
             computeSitePositions();
 
-           // modelManager.initModelNodePositions(cy.nodes());
+            modelManager.initModelNodePositions(cy.nodes());
 
+            cgfJson.nodes.forEach(function(node){
+                if(node.position)
+                    cy.getElementById(node.data.id)._private.data.position = node.position;
+            })
 
             cy.on('drag', 'node', function (e) {
                 computeSitePositions();
@@ -284,9 +317,9 @@ var CgfCy = function(el, cgfJson, doTopologyGrouping, modelManager) {
             cy.on('unselect', 'node', function(e){
                 //get original background color
                 var backgroundColor = modelManager.getModelNodeAttribute(this.id(), 'css.backgroundColor');
+                if(!backgroundColor)
+                    backgroundColor = 'white';
                 this.css('background-color', backgroundColor);
-
-
                 unselectAllSites(this);
             });
 
@@ -294,11 +327,38 @@ var CgfCy = function(el, cgfJson, doTopologyGrouping, modelManager) {
 
                 var site = selectAndReturnSite(e.cyPosition, e.cyTarget);
 
+                if(!site){ //node is clicked
+                    if(this.data('tooltipText')) { //there is content to show
+                        cy.$(('#' + this.id())).qtip({
+                            content: {
+                                text: function (event, api) {
+                                    return this.data('tooltipText');
+                                }
+                            },
+                            show: {
+                                ready: true
+                            },
+                            position: {
+                                my: 'center',
+                                at: 'center',
+                                adjust: {
+                                    cyViewport: true
 
-
-
-                if (site != null && site.siteInfo) {
-
+                                },
+                                effect: false
+                            },
+                            style: {
+                                classes: 'qtip-bootstrap',
+                                tip: {
+                                    corner: false,
+                                    width: 20,
+                                    height: 20
+                                }
+                            }
+                        });
+                    }
+                }
+                else if (site.siteInfo) { //site is clicked and it has information to display
                     //Adjust the positions of qtip boxes
                     var sitePosX = site.bbox.x - this._private.position.x;
                     var sitePosY = site.bbox.y - this._private.position.y;
@@ -306,19 +366,19 @@ var CgfCy = function(el, cgfJson, doTopologyGrouping, modelManager) {
                     var my;
                     var at;
 
-                    if(sitePosX < 0 && sitePosY < 0) {
+                    if (sitePosX < 0 && sitePosY < 0) {
                         my = "bottom right";
                         at = "top left";
                     }
-                    else if(sitePosX < 0 && sitePosY >= 0) {
+                    else if (sitePosX < 0 && sitePosY >= 0) {
                         my = "bottom right";
                         at = "bottom left";
                     }
-                    else if(sitePosX >= 0 && sitePosY >= 0) {
+                    else if (sitePosX >= 0 && sitePosY >= 0) {
                         my = "bottom left";
                         at = "bottom right";
                     }
-                    else if(sitePosX >= 0 && sitePosY < 0) {
+                    else if (sitePosX >= 0 && sitePosY < 0) {
                         my = "bottom left";
                         at = "top right";
                     }
@@ -351,6 +411,7 @@ var CgfCy = function(el, cgfJson, doTopologyGrouping, modelManager) {
                         }
                     });
                 }
+
             });
 
             cy.on('tapend', 'node', function(e){
