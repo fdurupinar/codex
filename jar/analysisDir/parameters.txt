@@ -1,5 +1,5 @@
-proteomics-platform-file = ../../PNLL-causality-formatted.txt
-proteomics-values-file = ../../PNLL-causality-formatted.txt
+proteomics-platform-file = PNLL-causality-formatted.txt
+proteomics-values-file = PNLL-causality-formatted.txt
 id-column = ID
 symbols-column = Symbols
 sites-column = Sites
