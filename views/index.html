@@ -103,6 +103,34 @@
                     <!--</td>-->
                 </tr>
 
+                <tr> <td> </td></tr>
+                <tr>
+                    <td align="left" height="8">
+                        <b><font color="#444444"  face="Verdana" size="2">Or&nbsp;</font></b>
+                    </td>
+                </tr>
+                <tr> <td> </td> </tr>
+
+                <tr>
+                    <!--<td  align="left" height="25">-->
+                    <td>
+
+                        <div  class="causality-file">
+                            C. Run your analysis
+                            <label for="analysis-directory-input">
+                                <i class="fa fa-file-text"></i> Load files
+                            </label>
+
+                            <div><input type="file" id="analysis-directory-input" accept=".txt" on-change = "loadAnalysisDir($event)" value ={_page.analysisFiles} multiple ></div>
+                        </div>
+                    </td>
+                    <!--</td>-->
+                </tr>
+                <tr> <td> </td></tr>
+
+
+
+
 
 
                 <tr>
@@ -120,10 +148,6 @@
         </div>
     <!--</div>-->
     <!--<view name="input-container"></view>-->
-
-
-
-
 
 
     <div id = "graph-container">

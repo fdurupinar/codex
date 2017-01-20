@@ -22,7 +22,7 @@ var docReady = false;
 var useQunit = true;
 
 var userCount;
-//var socket;
+var socket;
 
 app.modelManager = null;
 
@@ -122,7 +122,8 @@ app.get('/:docId', function (page, model, arg, next) {
             id: arg.docId
 
         });
-
+        // create a reference to the document
+        model.ref('_page.doc', 'documents.' + arg.docId);
 
     });
 
@@ -131,12 +132,6 @@ app.get('/:docId', function (page, model, arg, next) {
             return next(err);
         }
 
-        model.setNull(docPath, { // create the empty new doc if it doesn't already exist
-            id: arg.docId
-
-        });
-
-
     });
 
     model.subscribe(docPath, 'cy', function(err){
@@ -144,15 +139,15 @@ app.get('/:docId', function (page, model, arg, next) {
             return next(err);
         }
 
-        model.setNull(docPath, { // create the empty new doc if it doesn't already exist
-            id: arg.docId
-
-        });
-        // create a reference to the document
-        model.ref('_page.doc', 'documents.' + arg.docId);
-
     });
 
+    //For sharing information with the server
+    model.subscribe(docPath, 'analysisFiles', function(err){
+        if (err) {
+            return next(err);
+        }
+
+    });
 
 
 
@@ -322,7 +317,7 @@ app.proto.create = function (model) {
     docReady = true;
 
     cgfCy = require('./public/src/cgf-visualizer/cgf-cy.js');
-    //socket = io();
+    socket = io();
 
     var id = model.get('_session.userId');
     var name = model.get('users.' + id +'.name');
@@ -422,6 +417,43 @@ app.proto.createCyGraphFromCgf = function(cgfJson){
 
 }
 
+app.proto.loadAnalysisDir = function(e){
+    //Take the two files and put them on the server side in analysisDir and run shell command
+
+    var self = this;
+    var fileCnt = $('#analysis-directory-input')[0].files.length;
+    var fileContents = [];
+    var p1 = new Promise(function (resolve, reject) {
+        for (var i = 0; i < fileCnt; i++) {
+            (function (file) {
+                //Send these files to server
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    fileContents.push({name: file.name, content: e.target.result});
+                    if(fileContents.length >= fileCnt)
+                        resolve("success");
+                }
+
+                reader.readAsText($("#analysis-directory-input")[0].files[i]);
+            })($('#analysis-directory-input')[0].files[i]);
+        }
+    });
+
+    p1.then(function (content) {
+
+        socket.emit('analysisDir', fileContents, function(data){
+            self.createCyGraphFromCgf(JSON.parse(data));
+
+        });
+        //this.model.set('_page.doc.analysisFiles', fileContents );
+
+    }), function (xhr, status, error) {
+        api.set('content.text', "Error retrieving data: " + error);
+
+    }
+
+}
 
 app.proto.loadGraphFile = function(e){
 
@@ -441,8 +473,6 @@ app.proto.loadGraphFile = function(e){
 
             self.model.set('_page.doc.cgfText', this.result);
             self.createCyGraphFromCgf(JSON.parse(this.result));
-
-
 
         }
 
