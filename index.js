@@ -324,11 +324,12 @@ app.proto.create = function (model) {
 
     this.modelManager = require('./public/src/model/modelManager.js')(model, model.get('_page.room'), model.get('_session.userId'),name );
 
-     var modelJson = model.get('_page.doc.cy');
-     if(modelJson){
-         var cgfJson = convertModelJsonToCgfJson(modelJson);
-         this.createCyGraphFromCgf(cgfJson);
-     }
+    //TODO: this is causing freezing
+     // var modelJson = model.get('_page.doc.cy');
+     // if(modelJson){
+     //     var cgfJson = convertModelJsonToCgfJson(modelJson);
+     //     this.createCyGraphFromCgf(cgfJson);
+     // }
 
     this.atBottom = true;
 
@@ -401,7 +402,7 @@ app.proto.reloadGraph = function(){
  * @param cgfJson
  * Create cytoscape graph from cgfJson
  */
-app.proto.createCyGraphFromCgf = function(cgfJson){
+app.proto.createCyGraphFromCgf = function(cgfJson, callback){
 
 
     var doTopologyGrouping = this.model.get('_page.doc.doTopologyGrouping');
@@ -411,7 +412,7 @@ app.proto.createCyGraphFromCgf = function(cgfJson){
         cgfJson = JSON.parse(cgfText);
     }
 
-    cgfCy.createContainer($('#graph-container'),  cgfJson, doTopologyGrouping, this.modelManager);
+    cgfCy.createContainer($('#graph-container'),  cgfJson, doTopologyGrouping, this.modelManager, callback);
 
     this.modelManager.initModelFromJson(cgfJson);
 
@@ -423,9 +424,13 @@ app.proto.loadAnalysisDir = function(e){
     var self = this;
     var fileCnt = $('#analysis-directory-input')[0].files.length;
     var fileContents = [];
+    var notyView = noty({progressBar:true, type:"information", layout: "bottom",text: "Reading files...Please wait."});
+
+    notyView.setText( "Reading files...Please wait.");
     var p1 = new Promise(function (resolve, reject) {
         for (var i = 0; i < fileCnt; i++) {
             (function (file) {
+
                 //Send these files to server
                 var reader = new FileReader();
 
@@ -442,8 +447,15 @@ app.proto.loadAnalysisDir = function(e){
 
     p1.then(function (content) {
 
+        notyView.setText( "Analyzing results...Please wait.");
         socket.emit('analysisDir', fileContents, function(data){
-            self.createCyGraphFromCgf(JSON.parse(data));
+
+            notyView.setText( "Drawing graph...Please wait.");
+            self.createCyGraphFromCgf(JSON.parse(data), function(){
+                notyView.close();
+            });
+
+            self.model.set('_page.doc.cgfText', data);
 
         });
         //this.model.set('_page.doc.analysisFiles', fileContents );

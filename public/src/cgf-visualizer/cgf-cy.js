@@ -94,7 +94,8 @@ var CgfStyleSheet = cytoscape.stylesheet()
             return  Math.min(200,spacing);
         },
         'height':30,
-        'content': 'data(text)'
+        'content': 'data(text)',
+
     })
     .selector('node:selected')
     .css({
@@ -139,6 +140,7 @@ var CgfStyleSheet = cytoscape.stylesheet()
          'text-valign': 'bottom',
          'content': 'data(edgeType)', //there is a label when there's a clique among the nodes inside the compound
         'font-size': 8,
+
 
     })
     .selector("node:child")
@@ -189,10 +191,10 @@ function computeSitePositions(node){
 
         if(node._private.data.sites) {
             var siteLength = node._private.data.sites.length;
+
             for (var i = 0; i < siteLength; i++) {
                 var site = node._private.data.sites[i];
                 var paddingCoef = 0.9 ;
-
 
                 var centerX = node._private.position.x;
                 var centerY = node._private.position.y;
@@ -201,16 +203,21 @@ function computeSitePositions(node){
                 var siteCenterX;
                 var siteCenterY;
 
-                var siteWidth = 10;
-                var siteHeight = 10;
+                var siteWidth = 15;
+                var siteHeight = 15;
 
-                siteCenterX = centerX - width / 2 + siteWidth / 2  + width * i /siteLength ;
 
-                if(i% 2 == 0)
+
+                if(i % 2 == 0){
+                    siteCenterX = centerX - width / 2 + siteWidth / 2  + width * i /siteLength ;
                     siteCenterY = centerY - height /  2;
-                else
-                    siteCenterY = centerY + height / 2 ;
 
+                }
+                else{
+                    siteCenterX = centerX - width / 2 + siteWidth / 2  + width * (i - 1) /siteLength ;
+                    siteCenterY = centerY + height /  2;
+
+                }
 
                 //extend site information
 
@@ -286,7 +293,7 @@ module.exports.runLayout = function(){
 
 }
 
-module.exports.createContainer = function(el, cgfJson, doTopologyGrouping, modelManager) {
+module.exports.createContainer = function(el, cgfJson, doTopologyGrouping, modelManager, callback) {
 
     var cyElements = convertCgfToCytoscape(cgfJson, doTopologyGrouping);
 
@@ -321,6 +328,7 @@ module.exports.createContainer = function(el, cgfJson, doTopologyGrouping, model
 
         ready: function () {
 
+            if(callback) callback();
             cy.on('layoutstop', function() {
                 cy.nodes().forEach(function (node) {
                     computeSitePositions(node);
