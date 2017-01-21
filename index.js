@@ -395,15 +395,12 @@ app.proto.reloadGraph = function(){
     cy.destroy();
     var cgfText = this.model.get('_page.doc.cgfText');
     this.createCyGraphFromCgf(JSON.parse(cgfText));
-
-
 }
 /***
  * @param cgfJson
  * Create cytoscape graph from cgfJson
  */
 app.proto.createCyGraphFromCgf = function(cgfJson, callback){
-
 
     var doTopologyGrouping = this.model.get('_page.doc.doTopologyGrouping');
 

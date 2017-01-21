@@ -7,7 +7,7 @@ body {
 
 :root {
     --input-width: 400px;
-    --graph-width: 1200px;
+    --graph-width: 80%;
     --margin-width: 10px;
     --total-height: 1100px;
 }
