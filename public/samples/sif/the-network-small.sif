@@ -1,0 +1,54 @@
+PIK3CD	controls-state-change-of	CNTRL
+IFNAR1	in-complex-with	IFNAR2
+NOL6	in-complex-with	UTP3
+BRCA2	in-complex-with	H2AFX
+GRAP2	controls-state-change-of	AKT1
+GRAP2	controls-state-change-of	AKT2
+B2M	controls-state-change-of	IGHG1
+ARHGEF28	in-complex-with	RHOA
+POM121	in-complex-with	RANBP2
+CDH15	in-complex-with	CTNNB1
+SLC28A1	controls-phosphorylation-change-of	CAMK2D
+PSME4	controls-transport-of	PPP2R1A
+MCPH1	interacts-with	SET
+SLC28A1	controls-state-change-of	CAMK2B
+BLM	in-complex-with	PALB2
+GSTO1	controls-state-change-of	DIRAS3
+H3F3A	in-complex-with	PBX1
+AXIN2	in-complex-with	CTNNB1
+LIG1	catalysis-precedes	EP300
+FGR	controls-state-change-of	FCGR2A
+IGHG1	controls-state-change-of	BTK
+FZD6	in-complex-with	IL9
+GSTO1	controls-state-change-of	OLIG2
+FZD6	in-complex-with	IL5
+FZD6	in-complex-with	IL7
+FZD6	in-complex-with	IL6
+GRAP2	controls-state-change-of	AKT3
+EGF	controls-state-change-of	PLCG1
+FZD6	in-complex-with	IL3
+EGF	controls-state-change-of	PLCG2
+HSP90AA1	in-complex-with	HSPA1A
+HSP90AA1	in-complex-with	HSPA1B
+GNAS	in-complex-with	RGS12
+FGR	consumption-controled-by	FCGR3A
+PEBP1	controls-state-change-of	VWF
+PNP	controls-state-change-of	PAX5
+PNP	controls-state-change-of	PAX3
+CTCF	in-complex-with	EP300
+PML	controls-state-change-of	TP53
+IL2RA	controls-state-change-of	IL2RB
+KIF18A	in-complex-with	STAG1
+RAD51D
+GDF15
+GHRL
+SYDE1
+COL4A3
+ARHGAP25
+JMY
+SAG
+B4GALT5
+MCPH1
+ERBB3
+ERBB2
+LRIG1

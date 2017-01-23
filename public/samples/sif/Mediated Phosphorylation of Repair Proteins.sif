@@ -1,0 +1,17 @@
+ATM	controls-state-change-of	H2AFX
+RAD50	in-complex-with	NBN
+MRE11A	in-complex-with	NBN
+BRCA1	in-complex-with	H2AFX
+H2AFX	in-complex-with	TP53BP1
+H2AFX	in-complex-with	NBN
+ATM	controls-state-change-of	BRCA1
+ATM	controls-state-change-of	NBN
+BRCA1	in-complex-with	TP53BP1
+H2AFX	in-complex-with	MDC1
+MDC1	in-complex-with	TP53BP1
+ATM	controls-state-change-of	MDC1
+BRCA1	controls-state-change-of	NBN
+H2AFX	in-complex-with	RAD50
+H2AFX	in-complex-with	MRE11A
+BRCA1	in-complex-with	MDC1
+    
