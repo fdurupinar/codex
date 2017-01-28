@@ -127,41 +127,40 @@
 
                     node._private.data.sites.forEach(function(site){
 
-                        var siteWidth = site.bbox.w;
-                        var siteHeight = site.bbox.h;
+                        if(site.bbox) {
+                            var siteWidth = site.bbox.w;
+                            var siteHeight = site.bbox.h;
 
-                        var siteCenterX = site.bbox.x;
-                        var siteCenterY = site.bbox.y;
-
-
-
-
-                        if(site.selected)
-                            context.fillStyle = "#FFCC66";
-                        else
-                            context.fillStyle = site.siteBackgroundColor;
-
-                        context.strokeStyle = site.siteBorderColor;
-                        window.cyRenderer.drawEllipsePath(context,  siteCenterX, siteCenterY, siteWidth, siteHeight);
-                        context.fill();
-                        context.stroke();
+                            var siteCenterX = site.bbox.x;
+                            var siteCenterY = site.bbox.y;
 
 
+                            if (site.selected)
+                                context.fillStyle = "#FFCC66";
+                            else
+                                context.fillStyle = site.siteBackgroundColor;
 
-                        var textProp ={};
-                        var fontSize =  parseInt(siteHeight / 1.5);
-                        textProp.font = fontSize + "px Arial";
-                        textProp.color = site.siteTextColor;
-                        if(!textProp.color)
-                            textProp.color = 'black';
-                        textProp.label = site.siteText;
-                        textProp.centerX = siteCenterX;
-                        textProp.centerY = siteCenterY;
-                        textProp.opacity = 1;
-                        $$.sbgn.drawText(context, textProp, false);
+                            context.strokeStyle = site.siteBorderColor;
+                            window.cyRenderer.drawEllipsePath(context, siteCenterX, siteCenterY, siteWidth, siteHeight);
+                            context.fill();
+                            context.stroke();
 
 
-                        context.stroke();
+                            var textProp = {};
+                            var fontSize = parseInt(siteHeight / 1.5);
+                            textProp.font = fontSize + "px Arial";
+                            textProp.color = site.siteTextColor;
+                            if (!textProp.color)
+                                textProp.color = 'black';
+                            textProp.label = site.siteText;
+                            textProp.centerX = siteCenterX;
+                            textProp.centerY = siteCenterY;
+                            textProp.opacity = 1;
+                            $$.sbgn.drawText(context, textProp, false);
+
+
+                            context.stroke();
+                        }
 
 
                     });

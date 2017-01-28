@@ -161,11 +161,18 @@ var CgfStyleSheet = cytoscape.stylesheet()
 function convertCgfToCytoscape(cgfJson, doTopologyGrouping){
 
 
-
+    var nodes = [];
     var edges = [];
+    cgfJson.nodes.forEach(function(node) {
+        var nodeClone = _.clone(node);
+        nodes.push(nodeClone);
+    });
+
+
+
     cgfJson.edges.forEach(function(edge){
         var id = edge.data.source + "-" + edge.data.target;
-        var newEdge = edge;
+        var newEdge = _.clone(edge);
         newEdge.data.id = id;
 
         edges.push(newEdge);
@@ -173,7 +180,7 @@ function convertCgfToCytoscape(cgfJson, doTopologyGrouping){
 
 
 
-    var cyElements = {nodes: cgfJson.nodes, edges: edges};
+    var cyElements = {nodes: nodes, edges: edges};
 
 
     if(doTopologyGrouping)
@@ -328,14 +335,17 @@ module.exports.createContainer = function(el, cgfJson, doTopologyGrouping, model
 
         ready: function () {
 
-            if(callback) callback();
+
             cy.on('layoutstop', function() {
                 cy.nodes().forEach(function (node) {
                     computeSitePositions(node);
                 });
             });
 
-            modelManager.initModelNodePositions(cy.nodes());
+
+            if(callback) callback();
+
+           // modelManager.initModelNodePositions(cy.nodes());
 
             // cgfJson.nodes.forEach(function(node){
             //     if(node.position)
@@ -344,7 +354,6 @@ module.exports.createContainer = function(el, cgfJson, doTopologyGrouping, model
 
             cy.on('drag', 'node', function (e) {
                 computeSitePositions(this);
-
             });
 
             cy.on('select', 'node', function(e){

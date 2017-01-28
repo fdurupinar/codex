@@ -4,8 +4,26 @@
 
 
 function groupTopology(cyElements){
-    var nodes = cyElements.nodes;
-    var edges = cyElements.edges;
+
+    //Don't change nodes and edges, get their duplicates -- otherwise the global object may change
+    var nodes =  [];
+    var edges = [];
+
+
+    for(var i = 0; i < cyElements.nodes.length; i++){
+
+        var nodeClone = _.clone(cyElements.nodes[i]);
+        nodes.push(nodeClone);
+
+    }
+
+    for(var i = 0; i < cyElements.edges.length; i++){
+
+        var edgeClone = _.clone(cyElements.edges[i]);
+        edges.push(edgeClone);
+
+    }
+
 
 
     //store the edges associated with each node
@@ -26,9 +44,8 @@ function groupTopology(cyElements){
     for(var i = 0; i < nodes.length; i++){
         for(var j = i+1; j < nodes.length; j++){
 
-            if(nodes[i].data.id == "LIG3" && nodes[j].data.id == "PTPN2" ||  nodes[j].data.id== "LIG3" && nodes[i].data.id == "PTPN2")
-                var a = 1;
-
+            if(i==j)
+                console.log("i  = j !!! WArning")
 
             if(areNodesAnalogous(nodes[i],nodes[j],edges)) {
 
@@ -39,6 +56,7 @@ function groupTopology(cyElements){
                             newNode.incoming = nodes[i].incoming;
                             newNode.outgoing = nodes[i].outgoing;
                             newNode.data.children.push(nodes[j].data.id); //add new node as a child
+
                         }
                     })
 
@@ -58,7 +76,7 @@ function groupTopology(cyElements){
 
     //add parents and connected edges
     newNodes.forEach(function(newNode){
-        nodes.push(newNode);
+        nodes.push(newNode); //Add new nodes to the old list of nodes
 
         //add new edges except the ones inside
         newNode.incoming.forEach(function(edge){

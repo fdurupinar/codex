@@ -6,16 +6,17 @@ body {
 }
 
 :root {
-    --input-width: 400px;
-    --graph-width: 80%;
+    --input-width: 80%;
+    --graph-width:90%;
     --margin-width: 10px;
-    --total-height: 1100px;
+    --total-height: 90%;
 }
 
 #banner{
     position: absolute;
     height: 70px;
-    width:  calc( var(--input-width) + var(--graph-width) + var(--margin-width));
+    width:var(--graph-width);
+    /*width:  calc( var(--input-width) + var(--graph-width) + var(--margin-width));*/
     background-color: #7d7d80;
     margin:10px;
     padding-top: 10px;
@@ -23,13 +24,26 @@ body {
     font-size: xx-large;
     color:floralwhite;
 }
+
+#graph-options-container{
+    position:absolute;
+    top: 60px;
+    margin:10px;
+    height: 10px;
+    width:var(--graph-width);
+    display:none;
+}
+
 #input-container{
 
     position: absolute;
-    top: 100px;
-    width: var(--input-width);
+    top: 300px;
+    width: 70%;
+    left:10%;
+    height: 300px;
+    /*width: var(--input-width);*/
     padding: 10px;
-    height: var(--total-height);
+    /*height: var(--total-height);*/
     margin: var(--margin-width);
 
     color: #444444;
@@ -41,14 +55,20 @@ body {
 #graph-container{
 
     position: absolute;
-    top: 100px;
+    top: 120px;
     border: 1px solid #ddd;
+
+
+    /*width: 90%;*/
+    display: none;
     width: var(--graph-width);
     height: var(--total-height);
-    left: calc( var(--input-width) + var(--margin-width));
+    /*left: calc( var(--input-width) + var(--margin-width));*/
     margin: var(--margin-width);
 
 }
+
+
 
 #graph-file-input{
 
@@ -67,17 +87,7 @@ body {
     align: left;
 }
 
-#sifBox{
-    height: 600px;
-    width: calc( var(--input-width) - 2 * var(--margin-width));
-}
 
-
-
-#cgfBox{
-    width: calc( var(--input-width) - 2 * var(--margin-width));
-    height: 600px;
-}
 
 .tab-link{
 
@@ -89,6 +99,24 @@ body {
 input[type="file"] {
     display: none;
 }
+
+input[id = "back-button"]{
+    display: none;
+}
+
+
+input[id = "back-button"]{
+    display: none;
+}
+
+input[id = "demo-file-button"]{
+    display: none;
+}
+
+input[id = "download-button"]{
+    display: none;
+}
+
 
 .causality-file{
     /*border: 1px solid #ccc;*/
@@ -107,6 +135,11 @@ input[type="file"] {
     font-size: xx-large;
 }
 
+.fa-arrow-circle-left{
+    padding-top: 10px;
+    font-size: xx-large;
+}
+
 .instructions{
     color:floralwhite;
 }
@@ -115,3 +148,22 @@ input[type="file"] {
     font-size:medium;
 }
 
+/*#progress_bar {*/
+    /*margin: 10px 0;*/
+    /*padding: 3px;*/
+    /*border: 1px solid #000;*/
+    /*font-size: 14px;*/
+    /*clear: both;*/
+    /*opacity: 0;*/
+    /*-moz-transition: opacity 1s linear;*/
+    /*-o-transition: opacity 1s linear;*/
+    /*-webkit-transition: opacity 1s linear;*/
+/*}*/
+/*#progress_bar.loading {*/
+    /*opacity: 1.0;*/
+/*}*/
+/*#progress_bar .percent {*/
+    /*background-color: #99ccff;*/
+    /*height: auto;*/
+    /*width: 0;*/
+/*}*/

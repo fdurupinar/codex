@@ -1,6 +1,6 @@
 <Title:>
 
-    CODEX - Collaborative Data Explanation Tool - {{_session.userId}}
+    CausalPath: Causality Analysis for Proteomics Profiles
 
 
 <Head:>
@@ -43,104 +43,110 @@
     <script src="lib/js/jquery.noty.packaged.js"></script>
     <script src="lib/js/socket.io.js"></script>
     <script src="lib/js/cytoscape-cose-bilkent.js"></script>
+    <script src="lib/js/delivery.js"></script>
+
 
 
     <!--Source code-->
     <script src="./src/utilities/cy-helper-functions.js"></script>
     <script src="./src/utilities/topology-grouping.js"></script>
     <script src="./src/utilities/causality-cy-renderer.js"></script>
+    <!--Demo json-->
+    <script src="./demo/demoJson.js"></script>
 
-    <!--Sif-related-->
-    <script src="./src/sif-visualizer/sif-parser.js"></script>
 
 
     <!--Causality-related-->
 
     <div id = "banner">
-        CODEX - Collaborative Data Explanation Tool
+        CausalPath: Causality Analysis for Proteomics Profiles
     </div>
+
+    <div id  = "graph-options-container">
+        <table align= "top" cellpadding="10px" >
+            <tbody>
+            <tr align = "center">
+                <td>
+
+                    <label for="back-button">
+                    <i class="fa fa-arrow-circle-left"></i> Back
+                    </label>
+
+
+
+                    <div> <input type="button" id = "back-button" display = "none" value = "Back" on-click = "openInputContainer()"> </div>
+
+                </td>
+            <td></td><td></td>
+                <td class = "check-grouping"><input type="checkbox" id = "sif-topology-grouping" checked = "{{!_page.doc.noTopologyGrouping}}" on-change = "reloadGraph()" > Topology grouping</td>
+                <td></td><td></td>
+                <td class = "check-grouping"><input type="button" id = "run-layout" value = "Run Layout" on-click = "runLayout()"> </td>
+                <td></td><td></td>
+
+                <!--<td>-->
+                <!--<label for="download-button">-->
+                    <!--<i class="fa fa-download"></i> Download-->
+                <!--</label>-->
+                <!--<div> <input type="button" id = "download-button"  value = "Download" on-click = "downloadResults()"> </div></td>-->
+
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
     <div id= "input-container">
         <!--<div id="divUpload" class="tabcontent">-->
 
-            <table  border="0" cellpadding="2" width="100%" align="top" >
+            <table  border="0" cellpadding="40" width="100%" align="center" >
                 <tbody>
 
-                <tr>
-                    <td  class = "instructions"  align="left" height="15">
-                       A. Paste a Graph
-                    </td>
-                </tr>
+                <tr align="center">
 
-                <tr>
-                    <td>
-                        <view name="text-input-tabs"></view>
-                    </td>
-                </tr>
-
-                <tr> <td> </td></tr>
-
-                <tr> <td> </td></tr>
-                <tr>
-                    <td align="left" height="8">
-                        <b><font color="#444444"  face="Verdana" size="2">Or&nbsp;</font></b>
-                    </td>
-                </tr>
-                <tr> <td> </td> </tr>
-
-                <tr>
-                    <!--<td  align="left" height="25">-->
-                    <td>
+                    <td align="center">
 
                         <div  class="causality-file">
-                            B. Load from a file
+                            A. Upload json file for visualization
                             <label for="graph-file-input">
-                                <i class="fa fa-file-text"></i> Open
+                                <i class="fa fa-upload"></i> Select
                             </label>
 
-                            <div><input type="file" id="graph-file-input" accept=".txt,.sif, .cgf, .json" on-change = "loadGraphFile($event)" value ={_page.newFile} ></div>
+                            <div><input type="file" id="graph-file-input" accept=".txt, .json" on-change = "loadGraphFile($event)" value ={_page.newFile} ></div>
                         </div>
                     </td>
-                    <!--</td>-->
-                </tr>
-
-                <tr> <td> </td></tr>
-                <tr>
-                    <td align="left" height="8">
-                        <b><font color="#444444"  face="Verdana" size="2">Or&nbsp;</font></b>
+                    <td align = "center">
+                        OR
                     </td>
-                </tr>
-                <tr> <td> </td> </tr>
-
-                <tr>
-                    <!--<td  align="left" height="25">-->
-                    <td>
+                    <td align = "center">
 
                         <div  class="causality-file">
-                            C. Run your analysis
+                            B. Upload input files for analysis
                             <label for="analysis-directory-input">
-                                <i class="fa fa-file-text"></i> Load files
+                                <i class="fa fa-upload"></i> Select
                             </label>
 
-                            <div><input type="file" id="analysis-directory-input" accept=".txt" on-change = "loadAnalysisDir($event)" value ={_page.analysisFiles} multiple ></div>
+                            <div><input type="file" id="analysis-directory-input" accept=".txt, .zip" on-change = "loadAnalysisDir($event)" value ={_page.analysisFiles} multiple ></div>
                         </div>
                     </td>
-                    <!--</td>-->
+
+                    <td align = "center">
+                        OR
+                    </td>
+
+                    <td align = "center">
+
+                        <div  class="causality-file">
+                            C. Show demo graph
+
+                            <label for="demo-file-button">
+                                <i class="fa fa-play"></i> Display
+                            </label>
+                            <div><input type="button" id="demo-file-button"  value = "Display" on-click = "loadDemoGraph()"  ></div>
+                        </div>
+                    </td>
+
                 </tr>
-                <tr> <td> </td></tr>
 
 
-
-
-
-
-                <tr>
-                    <td class = "check-grouping"><input type="checkbox" id = "sif-topology-grouping" checked = "{{_page.doc.doTopologyGrouping}}" on-change = "reloadGraph()" > Topology grouping</td>
-                </tr>
-
-
-                <tr>
-                    <td class = "check-grouping"><input type="button" id = "run-layout" value = "Run Layout" on-click = "runLayout()"> </td>
-                </tr>
 
                 </tbody>
 
@@ -150,44 +156,11 @@
     <!--<view name="input-container"></view>-->
 
 
+
+
     <div id = "graph-container">
+
 
     </div>
 
 
-    <text-input-tabs:>
-        <div id= "text-input-tabs">
-            <ul class="nav nav-tabs">
-                <li class = "active "><a data-toggle="tab" href="#cgf-text-area">Cgf</a></li>
-                <li><a data-toggle="tab"  href="#sif-text-area">Sif</a></li>
-            </ul>
-
-
-            <div class="tab-content">
-
-                <div id="cgf-text-area" class="tab-pane fade in active">
-                    <textarea rows="10" id="cgfBox" class="input-text">{{_page.doc.cgfText}}</textarea>
-
-                    <p></p>
-
-                    <input type="button" class = "input-buttons" id = "cgf-text-clear-button"   value="Clear" on-click ="clearCgfText()"> &nbsp;&nbsp;&nbsp;
-
-                    <input type="button" class = "input-buttons" id = "cgf-text-submit-button"   value="Submit" on-click ="createCyGraphFromCgf()" >
-
-                </div>
-
-
-                <div id="sif-text-area" class="tab-pane">
-
-                    <textarea rows="10" id="sifBox" class="input-text">{{_page.doc.sifText}}</textarea>
-                    <p></p>
-
-                    <input type="button" class = "input-buttons" id = "sif-text-clear-button"   value="Clear" on-click ="clearSifText()"> &nbsp;&nbsp;&nbsp;
-
-                    <input type="button" class = "input-buttons" id = "sif-text-submit-button"   value="Submit" on-click ="updateSifGraph()" >
-
-                </div>
-
-            </div>
-
-        </div>
