@@ -53,7 +53,7 @@ If mongo does not work:
 
 Get project from github:
 
->git clone
+>git clone -b CausalPath
 [*https://github.com/fdurupinar/codex.git*](https://github.com/fdurupinar/codex.git)
 
 >cd codex
