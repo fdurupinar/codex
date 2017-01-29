@@ -23,6 +23,7 @@ var cgfCy;
 var cgfContainer;
 
 var delivery;
+var isDemo = false;
 
 app.get('/', function (page, model, params) {
     function getId() {
@@ -113,7 +114,8 @@ app.proto.create = function (model) {
 
 
     socket = io();
-    delivery = new Delivery(socket); //for file transfer
+
+    isDemo = false;
 
     var id = model.get('_session.userId');
     var name = model.get('users.' + id +'.name');
@@ -234,27 +236,36 @@ app.proto.openInputContainer = function(){
     $('#graph-options-container').hide();
     $('#graph-container').hide();
 }
+//Download and save results as room.zip
 app.proto.downloadResults = function(){
-    var fs = require('fs');
 
     var room = this.model.get('_page.room'); //each room will have its own folder
+
+    if(isDemo)
+        room = "demo"; //directly download
     socket.emit('downloadRequest', room);
 
-    var delivery = new Delivery(socket);
+    var notyView = noty({progressBar:true, type:"information", layout: "bottom",text: "Compressing files...Please wait."});
+    var dl = require('delivery');
+
+    var delivery = dl.listen(socket);
+    delivery.connect();
+
 
     delivery.on('receive.start',function(fileUID){
-        console.log('receiving a file!');
+        notyView.setText( "Receiving the file...Please wait.");
     });
     delivery.on('receive.success',function(file){
-        fs.writeFile((file.name), file.buffer, function (err) {
-            if (err) {
-                console.log('File could not be saved.');
-            }
-            console.log(file.name);
 
+
+        var blob = new Blob([file.buffer], {
+            type: "application/zip"
         });
 
+        saveAs(blob, file.name);
 
+
+        notyView.close();
     });
 
 
@@ -268,15 +279,17 @@ app.proto.loadAnalysisDir = function(e){
     var fileContents = [];
     var notyView = noty({progressBar:true, type:"information", layout: "bottom",text: "Reading files...Please wait."});
 
+    var room = this.model.get('_page.room');
     notyView.setText( "Reading files...Please wait.");
+    //Sending a zip file
     if(fileCnt == 1 &&  $('#analysis-directory-input')[0].files[0].name.split('.').pop().toLowerCase() == "zip"){
 
 
-
+        delivery = new Delivery(socket); //for file transfer
         delivery.on('delivery.connect',function(delivery){
 
             var file = $('#analysis-directory-input')[0].files[0];
-            var extraParams = {foo: 'bar'};
+            var extraParams = {room: room};
             delivery.send(file, extraParams);
 
 
@@ -352,6 +365,7 @@ app.proto.loadAnalysisDir = function(e){
 app.proto.loadDemoGraph = function(){
 
 
+    isDemo = true;
     this.model.set('_page.doc.cgfText', JSON.stringify(demoJson));
     this.createCyGraphFromCgf(demoJson);
 
