@@ -65,17 +65,10 @@ body {
     position: relative;
     /*top: 150px;*/
     border: 1px solid #ddd;
-
-
-    /*width: 90%;*/
     display: none;
-    /*width: var(--graph-width);*/
 
     height: 85vh;
-    /*height: var(--total-height);*/
-    /*left: calc( var(--input-width) + var(--margin-width));*/
     margin: var(--margin-width);
-
 
 }
 
@@ -86,15 +79,11 @@ body {
     font-size:medium;
 }
 
-
-
 .input-text{
 
     font-size: small;
     align: left;
 }
-
-
 
 .tab-link{
 
@@ -135,7 +124,7 @@ input[id = "download-button"]{
     background-color: #0b9bcd;
     color: floralwhite;
     /*border-radius: 5px;*/
-    width:calc( var(--input-width)/2);
+    /*width:calc( var(--input-width)/2);*/
 }
 
 .fa-file-text{
@@ -147,8 +136,9 @@ input[id = "download-button"]{
     font-size: xx-large;
 }
 
-.check-grouping{
+.graph-options-td{
 
+    padding-left:20px;
     /*padding-top: 30px;*/
     font-size:small;
 }
