@@ -117,17 +117,18 @@ app.proto.create = function (model) {
 
     isDemo = false;
 
+
     var id = model.get('_session.userId');
     var name = model.get('users.' + id +'.name');
 
     this.modelManager = require('./public/src/model/modelManager.js')(model, model.get('_page.room'), model.get('_session.userId'),name );
 
     //TODO: this is causing freezing because it is trying to redo topology grouping
-     // var modelJson = model.get('_page.doc.cy');
-     // if(modelJson){
-     //     var cgfJson = convertModelJsonToCgfJson(modelJson);
-     //     this.createCyGraphFromCgf(cgfJson);
-     // }
+     var modelJson = model.get('_page.doc.cy');
+     if(modelJson){
+         var cgfJson = convertModelJsonToCgfJson(modelJson);
+         this.createCyGraphFromCgf(cgfJson);
+     }
 
 
 };
@@ -172,6 +173,37 @@ app.proto.reloadGraph = function(){
     var cgfText = this.model.get('_page.doc.cgfText');
     this.createCyGraphFromCgf(JSON.parse(cgfText));
 }
+
+app.proto.loadDemoGraph = function(){
+
+
+    isDemo = true;
+    this.model.set('_page.doc.cgfText', JSON.stringify(demoJson));
+    this.createCyGraphFromCgf(demoJson);
+
+
+}
+
+app.proto.loadGraphFile = function(e){
+
+    var self = this;
+
+    var reader = new FileReader();
+
+    var extension = $("#graph-file-input")[0].files[0].name.split('.').pop().toLowerCase();
+
+    reader.onload = function (e) {
+
+        self.model.set('_page.doc.cgfText', this.result);
+        self.createCyGraphFromCgf(JSON.parse(this.result));
+
+
+    };
+    //TODO: move graph-file-input to an argument
+    reader.readAsText($("#graph-file-input")[0].files[0]);
+}
+
+
 /***
  * @param cgfJson
  * Create cytoscape graph from cgfJson
@@ -188,7 +220,7 @@ app.proto.createCyGraphFromCgf = function(cgfJson, callback){
 
 
     if(cgfJson) {
-      //  this.modelManager.initModelFromJson(cgfJson);
+        this.modelManager.initModelFromJson(cgfJson);
 
         var notyView = noty({
             progressBar: true,
@@ -205,7 +237,7 @@ app.proto.createCyGraphFromCgf = function(cgfJson, callback){
 
             }
             catch(error){
-                console.log(error + " Cytoscape not created yet.");
+                //console.log(error + " Cytoscape not created yet.");
             }
         } //cytoscape is loaded
 
@@ -216,6 +248,8 @@ app.proto.createCyGraphFromCgf = function(cgfJson, callback){
 
         cgfContainer = new cgfCy.createContainer($('#graph-container'), cgfJson, !noTopologyGrouping, this.modelManager, function () {
 
+
+            $('#download-div').show();
             notyView.close();
 
             if (callback) callback();
@@ -226,6 +260,7 @@ app.proto.createCyGraphFromCgf = function(cgfJson, callback){
 
 app.proto.openGraphContainer = function(){
     $('#input-container').hide();
+    $('#download-div').hide(); //this only appears after analysis is performed
     $('#graph-options-container').show();
     $('#graph-container').show();
     // $('#graph-container').position.top = "100px";
@@ -304,7 +339,6 @@ app.proto.loadAnalysisDir = function(e){
         });
 
         socket.on('analyzedFile', function(data){
-            notyView.setText( "Drawing graph...Please wait.");
             self.createCyGraphFromCgf(JSON.parse(data), function(){
                 notyView.close();
             });
@@ -345,7 +379,6 @@ app.proto.loadAnalysisDir = function(e){
             var room = self.model.get('_page.room'); //each room will have its own folder
             socket.emit('analysisDir', fileContents, room, function(data){
 
-                notyView.setText( "Drawing graph...Please wait.");
                 self.createCyGraphFromCgf(JSON.parse(data), function(){
                     notyView.close();
                 });
@@ -361,34 +394,6 @@ app.proto.loadAnalysisDir = function(e){
         }
     }
 
-}
-app.proto.loadDemoGraph = function(){
-
-
-    isDemo = true;
-    this.model.set('_page.doc.cgfText', JSON.stringify(demoJson));
-    this.createCyGraphFromCgf(demoJson);
-
-
-}
-
-app.proto.loadGraphFile = function(e){
-
-    var self = this;
-
-    var reader = new FileReader();
-
-    var extension = $("#graph-file-input")[0].files[0].name.split('.').pop().toLowerCase();
-
-    reader.onload = function (e) {
-
-        self.model.set('_page.doc.cgfText', this.result);
-        self.createCyGraphFromCgf(JSON.parse(this.result));
-
-
-    };
-    //TODO: move graph-file-input to an argument
-    reader.readAsText($("#graph-file-input")[0].files[0]);
 }
 
 

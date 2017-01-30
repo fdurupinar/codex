@@ -235,7 +235,7 @@ module.exports =  function(model, docId, userId, userName) {
          * @returns {*}
          */
         getModelNodeAttribute: function(id, attributeName){
-            return model.get('_page.doc.nodes.' + id + '.' + attributeName);
+            return model.get('_page.doc.cy.nodes.' + id + '.' + attributeName);
 
         },
 
