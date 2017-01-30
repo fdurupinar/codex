@@ -7,44 +7,40 @@ body {
 
 :root {
     --input-width: 80%;
-    --graph-width:90%;
+    --graph-width:99%;
     --margin-width: 10px;
     --total-height: 90%;
 }
 
 #banner{
-    position: absolute;
+    position: relative;
     height: 70px;
-    width:var(--graph-width);
+    /*width: 99%;*/
+    /*width:var(--graph-width);*/
     /*width:  calc( var(--input-width) + var(--graph-width) + var(--margin-width));*/
     background-color: #7d7d80;
-    margin:10px;
-    padding-top: 10px;
+    margin:var(--margin-width);
+    padding: 10px;
+
     text-align: center;
     font-size: xx-large;
     color:floralwhite;
 }
 
-#graph-options-container{
-    position:absolute;
-    top: 60px;
-    margin:10px;
-    height: 10px;
-    width:var(--graph-width);
-    display:none;
-}
+
 
 #input-container{
 
-    position: absolute;
-    top: 300px;
-    width: 70%;
-    left:10%;
-    height: 300px;
+    position: relative;
+    top: 30%;
+    /*width: 70%;*/
+    /*left:10%;*/
+    height: 30%;
     /*width: var(--input-width);*/
     padding: 10px;
     /*height: var(--total-height);*/
     margin: var(--margin-width);
+    margin-top: 50px;
 
     color: #444444;
     background-color: #0B9BCD;
@@ -52,19 +48,34 @@ body {
     font-size:larger;
     font-family: Verdana;
 }
+
+#graph-options-container{
+    /*position:absolute;*/
+    /*top: 60px;*/
+    /*margin:10px;*/
+    /*height: 10px;*/
+    /*width:var(--graph-width);*/
+    margin-left:10px;
+    margin-right: 10px;
+    border: 1px solid #ddd;
+    display:none;
+}
 #graph-container{
 
-    position: absolute;
-    top: 120px;
+    position: relative;
+    /*top: 150px;*/
     border: 1px solid #ddd;
 
 
     /*width: 90%;*/
     display: none;
-    width: var(--graph-width);
-    height: var(--total-height);
+    /*width: var(--graph-width);*/
+
+    height: 85vh;
+    /*height: var(--total-height);*/
     /*left: calc( var(--input-width) + var(--margin-width));*/
     margin: var(--margin-width);
+
 
 }
 
@@ -75,11 +86,7 @@ body {
     font-size:medium;
 }
 
-.check-grouping{
 
-    padding-top: 30px;
-    font-size:small;
-}
 
 .input-text{
 
@@ -117,8 +124,8 @@ input[id = "download-button"]{
     display: none;
 }
 
-
-.causality-file{
+/*One column of the initial input screen*/
+.input-td{
     /*border: 1px solid #ccc;*/
     display: inline-block;
     font-size: large;
@@ -136,8 +143,14 @@ input[id = "download-button"]{
 }
 
 .fa-arrow-circle-left{
-    padding-top: 10px;
+    /*padding-top: 10px;*/
     font-size: xx-large;
+}
+
+.check-grouping{
+
+    /*padding-top: 30px;*/
+    font-size:small;
 }
 
 .instructions{

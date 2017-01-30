@@ -54,9 +54,6 @@ app.get('/:docId', function (page, model, arg, next) {
     room = arg.docId;
 
 
-
-
-
     var docPath = 'documents.' + arg.docId;
 
     model.subscribe(docPath, 'cgfText', function(err){
@@ -86,9 +83,6 @@ app.get('/:docId', function (page, model, arg, next) {
         }
 
     });
-
-
-
 
 
     model.set('_page.room', room);
@@ -123,12 +117,6 @@ app.proto.create = function (model) {
 
     this.modelManager = require('./public/src/model/modelManager.js')(model, model.get('_page.room'), model.get('_session.userId'),name );
 
-    //TODO: this is causing freezing because it is trying to redo topology grouping
-     var modelJson = model.get('_page.doc.cy');
-     if(modelJson){
-         var cgfJson = convertModelJsonToCgfJson(modelJson);
-         this.createCyGraphFromCgf(cgfJson);
-     }
 
 
 };
@@ -349,8 +337,6 @@ app.proto.loadAnalysisDir = function(e){
         });
 
 
-
-
     }
     else{
 
@@ -395,13 +381,6 @@ app.proto.loadAnalysisDir = function(e){
     }
 
 }
-
-
-
-
-
-
-
 
 
 app.proto.formatTime = function (message) {

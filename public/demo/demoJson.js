@@ -1,3 +1,7 @@
+/***
+ * This file is used to keep the json object for the web demo in memory
+ * @type {{nodes: [*], edges: [*]}}
+ */
 var demoJson = {
   "nodes" : [ {
     "css" : {
