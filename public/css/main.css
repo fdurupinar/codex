@@ -79,6 +79,7 @@ body {
     font-size:medium;
 }
 
+
 .input-text{
 
     font-size: small;
@@ -151,6 +152,13 @@ input[id = "download-button"]{
     font-size:medium;
 }
 
+
+
+/* Tooltip on right */
+.tooltip.bottom > .tooltip-inner {
+    border-right: 5px solid black;
+    font-size: medium;
+}
 /*#progress_bar {*/
     /*margin: 10px 0;*/
     /*padding: 3px;*/

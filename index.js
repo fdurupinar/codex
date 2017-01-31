@@ -20,9 +20,7 @@ var socket;
 app.modelManager = null;
 
 var cgfCy;
-var cgfContainer;
 
-var delivery;
 var isDemo = false;
 
 app.get('/', function (page, model, params) {
@@ -110,6 +108,8 @@ app.proto.create = function (model) {
     socket = io();
 
     isDemo = false;
+
+
 
 
     var id = model.get('_session.userId');
@@ -234,7 +234,7 @@ app.proto.createCyGraphFromCgf = function(cgfJson, callback){
         this.openGraphContainer();
 
 
-        cgfContainer = new cgfCy.createContainer($('#graph-container'), cgfJson, !noTopologyGrouping, this.modelManager, function () {
+        var cgfContainer = new cgfCy.createContainer($('#graph-container'), cgfJson, !noTopologyGrouping, this.modelManager, function () {
 
 
             $('#download-div').show();
@@ -308,7 +308,7 @@ app.proto.loadAnalysisDir = function(e){
     if(fileCnt == 1 &&  $('#analysis-directory-input')[0].files[0].name.split('.').pop().toLowerCase() == "zip"){
 
 
-        delivery = new Delivery(socket); //for file transfer
+        var delivery = new Delivery(socket); //for file transfer
         delivery.on('delivery.connect',function(delivery){
 
             var file = $('#analysis-directory-input')[0].files[0];
