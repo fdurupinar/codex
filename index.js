@@ -94,11 +94,6 @@ app.get('/:docId', function (page, model, arg, next) {
 
 
 
-app.proto.init = function (model) {
-
-};
-
-
 app.proto.create = function (model) {
 
     docReady = true;
